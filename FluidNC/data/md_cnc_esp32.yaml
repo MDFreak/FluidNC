@@ -1,22 +1,22 @@
-name:  ESP32_XYZA
+name: ESP32_XYZA
 board: ESP32X_4X
 stepping:
   engine: RMT
-  idle_ms: 250  
+  idle_ms: 250
   pulse_us: 2
   dir_delay_us: 1
   disable_delay_us: 0
 
 axes:
   shared_stepper_disable_pin: gpio.13:low
-  
+
   x:
     steps_per_mm: 500.000
     max_rate_mm_per_min: 800.000
     acceleration_mm_per_sec2: 25
     max_travel_mm: 1000
-   	soft_limits: false    
-   	homing:
+    soft_limits: false
+    homing:
       cycle: 2
       positive_direction: false
       mpos_mm: 10
@@ -31,8 +31,8 @@ axes:
       limit_pos_pin: NO_PIN
       limit_all_pin: gpio.39:low
       hard_limits: false
-      pulloff_mm:1.000
-      tmc_2209:       
+      pulloff_mm: 1.000
+      tmc_2209:
         step_pin: gpio.26
         direction_pin: gpio.16
 
@@ -57,8 +57,8 @@ axes:
       limit_pos_pin: NO_PIN
       limit_all_pin: gpio.36:low
       hard_limits: false
-      pulloff_mm:1.000
-      tmc_2209:       
+      pulloff_mm: 1.000
+      tmc_2209:
         step_pin: gpio.25
         direction_pin: gpio.27
     motor1:
@@ -83,8 +83,8 @@ axes:
       limit_neg_pin: NO_PIN
       limit_pos_pin: NO_PIN
       limit_all_pin: gpio.34:low
-      pulloff_mm:1.000
-      tmc_2209:       
+      pulloff_mm: 1.000
+      tmc_2209:
         step_pin: gpio.17
         direction_pin: gpio.14
 spi:
@@ -100,7 +100,7 @@ coolant:
   flood_pin: gpio.13
   mist_pin:  gpio.15
 
-        
+
 probe:
 control:
   safety_door_pin: NO_PIN
