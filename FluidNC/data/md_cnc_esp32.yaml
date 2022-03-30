@@ -24,68 +24,118 @@ axes:
       settle_ms: 500
 
     motor0:
+      limit_neg_pin: gpio.33:low
+      limit_pos_pin: NO_PIN
+      limit_all_pin: NO_PIN
+      hard_limits: false
+      pulloff_mm: 1.000
+      tmc_2209:
+        cs_pin: NO_PIN
+        disable_pin: I2SO.0
+        step_pin: I2SO.1
+        direction_pin: I2SO.2
+        r_sense_ohms: 0.110
+        run_amps: 0.750
+        hold_amps: 0.250
+        microsteps: 32
+
+    motor1:
       limit_neg_pin: gpio.33
       limit_pos_pin: NO_PIN
       limit_all_pin: NO_PIN
       hard_limits: false
       pulloff_mm: 1.000
       tmc_2209:
-        cs_pin: i2so.3
-        step_pin: I2SO.1
-        direction_pin: I2SO.2
-        disable_pin: I2SO.0
+        cs_pin: NO_PIN
+        disable_pin: I2SO.9
+        step_pin: I2SO.10:low
+        direction_pin: I2SO.11
+        r_sense_ohms: 0.110
+        run_amps: 0.750
+        hold_amps: 0.250
+        microsteps: 32
 
   y:
-    steps_per_mm: 500
-    max_rate_mm_per_min: 800
+    steps_per_mm: 500.000
+    max_rate_mm_per_min: 800.000
     acceleration_mm_per_sec2: 25
-    max_travel_mm: 1000
-    soft_limits: false
-    homing:
-      cycle: 2
-      positive_direction: false
-      mpos_mm: 10
-      feed_mm_per_min: 100.000
-      seek_mm_per_min: 200.000
-      settle_ms: 500
-      seek_scaler: 1.100
-      feed_scaler: 1.100
-
-    motor0:
-      limit_neg_pin: NO_PIN
-      limit_pos_pin: NO_PIN
-      limit_all_pin: gpio.36:low
-      hard_limits: false
-      pulloff_mm: 1.000
-      tmc_2209:
-        step_pin: gpio.25
-        direction_pin: gpio.27
-    motor1:
-      null_motor:
-
-  z:
-    steps_per_mm: 800
-    max_rate_mm_per_min: 2000
-    acceleration_mm_per_sec2: 25.000
-    max_travel_mm: 1000
+    max_travel_mm: 100.000
     soft_limits: false
     homing:
       cycle: 1
-      positive_direction: true
-      mpos_mm: 10.000
+      positive_direction: false
+      mpos_mm: 150.000
       feed_mm_per_min: 100.000
-      seek_mm_per_min: 800.000
+      seek_mm_per_min: 200.000
       settle_ms: 500
-      seek_scaler: 1.100
-      feed_scaler: 1.100
+
     motor0:
-      limit_neg_pin: NO_PIN
+      limit_neg_pin: gpio.32:low
       limit_pos_pin: NO_PIN
-      limit_all_pin: gpio.34:low
+      limit_all_pin: NO_PIN
+      hard_limits: false
       pulloff_mm: 1.000
       tmc_2209:
-        step_pin: gpio.17
-        direction_pin: gpio.14
+        cs_pin: NO_PIN
+        disable_pin: I2SO.3
+        step_pin: I2SO.4
+        direction_pin: I2SO.5
+        r_sense_ohms: 0.110
+        run_amps: 0.750
+        hold_amps: 0.250
+        microsteps: 32
+
+    motor1:
+      limit_neg_pin: gpio.32:low
+      limit_pos_pin: NO_PIN
+      limit_all_pin: NO_PIN
+      hard_limits: false
+      pulloff_mm: 1.000
+      tmc_2209:
+        cs_pin: NO_PIN
+        disable_pin: I2SO.12
+        step_pin: I2SO.13
+        direction_pin: I2SO.14
+        r_sense_ohms: 0.110
+        run_amps: 0.750
+        hold_amps: 0.250
+        microsteps: 32
+
+  z:
+    steps_per_mm: 500.000
+    max_rate_mm_per_min: 800.000
+    acceleration_mm_per_sec2: 25
+    max_travel_mm: 100.000
+    soft_limits: false
+    homing:
+      cycle: 1
+      positive_direction: false
+      mpos_mm: 150.000
+      feed_mm_per_min: 100.000
+      seek_mm_per_min: 200.000
+      settle_ms: 500
+
+    motor0:
+      limit_neg_pin: gpio.32:low
+      limit_pos_pin: NO_PIN
+      limit_all_pin: NO_PIN
+      hard_limits: false
+      pulloff_mm: 1.000
+      tmc_2209:
+        cs_pin: NO_PIN
+        disable_pin: I2SO.3
+        step_pin: I2SO.4
+        direction_pin: I2SO.5
+        r_sense_ohms: 0.110
+        run_amps: 0.750
+        hold_amps: 0.250
+        microsteps: 32
+
+i2so:
+  bck_pin: gpio.25
+  ws_pin: gpio.26
+  data_pin: gpio.27
+
 spi:
   miso_pin: gpio.19
   mosi_pin: gpio.23
