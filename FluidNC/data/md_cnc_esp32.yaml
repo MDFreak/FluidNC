@@ -1,5 +1,5 @@
-name: ESP32_XYZA
-board: ESP32X_4X
+name: MD_CNC_ESP32
+board: MKS_TINYBEE_1V0
 stepping:
   engine: RMT
   idle_ms: 250
