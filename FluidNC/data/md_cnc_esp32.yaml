@@ -3,7 +3,7 @@ board: MKS_TINYBEE_1V0
 stepping:
   engine: I2S_STREAM
   idle_ms: 250
-  pulse_us: 4
+  pulse_us: 2
   dir_delay_us: 1
   disable_delay_us: 0
 
@@ -16,14 +16,12 @@ axes:
     max_travel_mm: 100.000
     soft_limits: false
     homing:
-      cycle: 2
+      cycle: 1
       positive_direction: false
       mpos_mm: 150.000
       feed_mm_per_min: 100.000
       seek_mm_per_min: 200.000
       settle_ms: 500
-      seek_scaler: 1.100
-      feed_scaler: 1.100
 
     motor0:
       limit_neg_pin: gpio.33
@@ -33,8 +31,8 @@ axes:
       pulloff_mm: 1.000
       tmc_2209:
         cs_pin: i2so.3
-        step_pin: I2SO.2
-        direction_pin: I2SO.1
+        step_pin: I2SO.1
+        direction_pin: I2SO.2
         disable_pin: I2SO.0
 
   y:
