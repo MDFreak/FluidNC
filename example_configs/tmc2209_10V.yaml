@@ -131,7 +131,7 @@ axes:
       limit_pos_pin: gpio.36
       limit_all_pin: NO_PIN
       hard_limits: false
-      pulloff_mm:1.00
+      pulloff_mm: 1.00
       tmc_2209:
         step_pin: gpio.16
         direction_pin: gpio.15

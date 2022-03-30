@@ -123,9 +123,9 @@ axes:
       pulloff_mm: 1.000
       tmc_2209:
         cs_pin: NO_PIN
-        disable_pin: I2SO.3
-        step_pin: I2SO.4
-        direction_pin: I2SO.5
+        disable_pin: I2SO.6
+        step_pin: I2SO.7
+        direction_pin: I2SO.8
         r_sense_ohms: 0.110
         run_amps: 0.750
         hold_amps: 0.250
@@ -146,9 +146,8 @@ sdcard:
   card_detect_pin: NO_PIN
 
 coolant:
-  flood_pin: gpio.13
-  mist_pin:  gpio.15
-
+  flood_pin: I2SO.22
+  mist_pin:  I2SO.23
 
 probe:
 control:
@@ -164,7 +163,7 @@ control:
 
 PWM:
   pwm_hz: 5000
-  output_pin: gpio.0
+  output_pin: I2SO.16
   enable_pin: gpio.12
   direction_pin: NO_PIN
   disable_with_s0: false
