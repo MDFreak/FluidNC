@@ -9,12 +9,12 @@ stepping:
 
 axes:
   shared_stepper_disable_pin: NO_PIN
-  # x:
-  #  steps_per_mm: 6400.000
-  #  max_rate_mm_per_min: 800.000
-  #  acceleration_mm_per_sec2: 25
-  #  max_travel_mm: 100.000
-  #  soft_limits: false
+  x:
+    steps_per_mm: 6400.000
+    max_rate_mm_per_min: 800.000
+    acceleration_mm_per_sec2: 25
+    max_travel_mm: 100.000
+    soft_limits: false
   #  homing:
   #    cycle: 1
   #    positive_direction: false
@@ -22,14 +22,14 @@ axes:
   #    feed_mm_per_min: 100.000
   #    seek_mm_per_min: 200.000
   #    settle_ms: 500
-#
-  #  motor0:
+
+    motor0:
   #    limit_neg_pin: NO_PIN
   #    limit_pos_pin: NO_PIN
-  #    limit_all_pin: gpio.33:low
-  #    hard_limits: true
-  #    pulloff_mm: 1.000
-  #    tmc_2209:
+      limit_all_pin: gpio.33:low
+      hard_limits: true
+      pulloff_mm: 1.000
+      tmc_2209:
   #      disable_pin: I2SO.0
   #      step_pin: I2SO.1
   #      direction_pin: I2SO.2
@@ -38,8 +38,8 @@ axes:
   #      hold_amps: 0.250
   #      microsteps: 64
   #      uart:
-#
-  #  motor1:
+
+    motor1:
   #    pulloff_mm: 1.000
   #    tmc_2209:
   #      disable_pin: I2SO.9
@@ -50,8 +50,8 @@ axes:
   #      hold_amps: 0.250
   #      microsteps: 64
   #      uart:
-#
-  #y:
+
+  y:
   #  steps_per_mm: 6400.000
   #  max_rate_mm_per_min: 800.000
   #  acceleration_mm_per_sec2: 25
@@ -61,8 +61,8 @@ axes:
   #    positive_direction: false
   #    mpos_mm: 150.000
   #    settle_ms: 500
-#
-  #  motor0:
+
+    motor0:
   #    limit_all_pin: gpio.32:low
   #    hard_limits: true
   #    pulloff_mm: 1.000
@@ -79,9 +79,9 @@ axes:
 ###          rxd_pin: gpio.21
 # #         baud: 115200
 # #         mode: 8N1
-#
-#
-  #  motor1:
+
+
+    motor1:
   #    hard_limits: false
   #    pulloff_mm: 1.000
   #    tmc_2209:
@@ -98,21 +98,21 @@ axes:
 # #         baud: 115200
 # #         mode: 8N1
 #
-  #z:
+  z:
   #  steps_per_mm: 500.000
   #  max_rate_mm_per_min: 800.000
   #  acceleration_mm_per_sec2: 25
   #  max_travel_mm: 100.000
   #  soft_limits: false
   #  homing:
-      cycle: 1
-      positive_direction: false
-      mpos_mm: 150.000
-      feed_mm_per_min: 100.000
-      seek_mm_per_min: 200.000
-      settle_ms: 500
-#
-  #  motor0:
+  #    cycle: 1
+  #    positive_direction: false
+  #    mpos_mm: 150.000
+  #    feed_mm_per_min: 100.000
+  #    seek_mm_per_min: 200.000
+  #    settle_ms: 500
+
+    motor0:
   #    limit_neg_pin: gpio.22:low
   #    hard_limits: false
   #    pulloff_mm: 1.000
