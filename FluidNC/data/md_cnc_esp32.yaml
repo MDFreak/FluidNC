@@ -1,5 +1,19 @@
 name: MD_CNC_ESP32
 board: MKS_TINYBEE_1V0
+
+i2so:
+  bck_pin: gpio.25
+  ws_pin: gpio.26
+  data_pin: gpio.27
+
+spi:
+  miso_pin: gpio.19
+  mosi_pin: gpio.23
+  sck_pin: gpio.18
+
+sdcard:
+  cs_pin: gpio.5
+
 stepping:
   engine: I2S_STREAM
   idle_ms: 250
@@ -15,29 +29,29 @@ axes:
     acceleration_mm_per_sec2: 25
     max_travel_mm: 100.000
     soft_limits: false
-  #  homing:
-  #    cycle: 1
-  #    positive_direction: false
-  #    mpos_mm: 150.000
-  #    feed_mm_per_min: 100.000
-  #    seek_mm_per_min: 200.000
-  #    settle_ms: 500
+    homing:
+      cycle: 1
+      positive_direction: false
+      mpos_mm: 150.000
+      feed_mm_per_min: 100.000
+      seek_mm_per_min: 200.000
+      settle_ms: 500
 
     motor0:
-  #    limit_neg_pin: NO_PIN
-  #    limit_pos_pin: NO_PIN
-      limit_all_pin: gpio.33:low
+      limit_neg_pin: gpio.33:low
+      # limit_pos_pin: NO_PIN
+      # limit_all_pin: gpio.33:low
       hard_limits: true
       pulloff_mm: 1.000
       tmc_2209:
-  #      disable_pin: I2SO.0
-  #      step_pin: I2SO.1
-  #      direction_pin: I2SO.2
-  #      r_sense_ohms: 0.110
-  #      run_amps: 1.200
-  #      hold_amps: 0.250
-  #      microsteps: 64
-  #      uart:
+        disable_pin: I2SO.0
+        step_pin: I2SO.1
+        direction_pin: I2SO.2
+        r_sense_ohms: 0.110
+        run_amps: 1.200
+        hold_amps: 0.250
+        microsteps: 64
+        # uart:
 
     motor1:
   #    pulloff_mm: 1.000
@@ -128,19 +142,6 @@ axes:
 ###          rxd_pin: gpio.21
 # #         baud: 115200
 # #         mode: 8N1
-
-i2so:
-  bck_pin: gpio.25
-  ws_pin: gpio.26
-  data_pin: gpio.27
-
-spi:
-  miso_pin: gpio.19
-  mosi_pin: gpio.23
-  sck_pin: gpio.18
-
-sdcard:
-  cs_pin: gpio.5
 
 coolant:
   flood_pin: I2SO.22
