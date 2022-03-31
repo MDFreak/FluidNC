@@ -39,7 +39,7 @@ axes:
         run_amps: 1.200
         hold_amps: 0.250
         microsteps: 64
-        # uart:
+        uart:
 
     motor1:
       pulloff_mm: 1.000
@@ -52,7 +52,7 @@ axes:
         run_amps: 1.200
         hold_amps: 0.250
         microsteps: 64
-        #uart:
+        uart:
 
   y:
   #  steps_per_mm: 6400.000
@@ -148,7 +148,7 @@ spi:
   sck_pin: gpio.18
 
 sdcard:
-  card_detect_pin: gpio.34
+  #card_detect_pin: gpio.34
 
 #probe:
 control:
@@ -164,8 +164,10 @@ control:
 
 PWM:
   pwm_hz: 5000
-  output_pin: gpio.12
-  enable_pin: I2SO.16
+  #output_pin: gpio.12
+  #enable_pin: I2SO.16
+  output_pin: I2SO.16
+  enable_pin: gpio.12
   disable_with_s0: false
   s0_with_disable: true
   spinup_ms: 0
