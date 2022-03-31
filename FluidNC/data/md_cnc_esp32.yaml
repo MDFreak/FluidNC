@@ -8,7 +8,7 @@ stepping:
   disable_delay_us: 0
 
 axes:
-  shared_stepper_disable_pin: NO_PIN
+#  shared_stepper_disable_pin: NO_PIN
   x:
     steps_per_mm: 500.000
     max_rate_mm_per_min: 800.000
@@ -25,35 +25,35 @@ axes:
 
     motor0:
       limit_neg_pin: gpio.33:low
-      limit_pos_pin: NO_PIN
-      limit_all_pin: NO_PIN
+#      limit_pos_pin: NO_PIN
+#      limit_all_pin: NO_PIN
       hard_limits: false
       pulloff_mm: 1.000
       tmc_2209:
-        cs_pin: NO_PIN
         disable_pin: I2SO.0
         step_pin: I2SO.1
         direction_pin: I2SO.2
         r_sense_ohms: 0.110
-        run_amps: 0.750
+        run_amps: 1.200
         hold_amps: 0.250
         microsteps: 32
+        uart:
 
     motor1:
-      limit_neg_pin: NO_PIN
-      limit_pos_pin: NO_PIN
-      limit_all_pin: NO_PIN
+#      limit_neg_pin: NO_PIN
+#      limit_pos_pin: NO_PIN
+#      limit_all_pin: NO_PIN
       hard_limits: false
       pulloff_mm: 1.000
       tmc_2209:
-        cs_pin: NO_PIN
         disable_pin: I2SO.9
-        step_pin: I2SO.10:low
+        step_pin: I2SO.10
         direction_pin: I2SO.11
         r_sense_ohms: 0.110
-        run_amps: 0.750
+        run_amps: 1.200
         hold_amps: 0.250
         microsteps: 32
+        uart:
 
   y:
     steps_per_mm: 500.000
@@ -71,35 +71,52 @@ axes:
 
     motor0:
       limit_neg_pin: gpio.32:low
-      limit_pos_pin: NO_PIN
-      limit_all_pin: NO_PIN
+#      limit_pos_pin: NO_PIN
+#      limit_all_pin: NO_PIN
       hard_limits: false
       pulloff_mm: 1.000
       tmc_2209:
-        cs_pin: NO_PIN
         disable_pin: I2SO.3
         step_pin: I2SO.4
         direction_pin: I2SO.5
         r_sense_ohms: 0.110
-        run_amps: 0.750
+        run_amps: 1.200
         hold_amps: 0.250
         microsteps: 32
+        uart:
+##          txd_pin: gpio.22
+##          rxd_pin: gpio.21
+#          txd_pin: NO_PIN
+#          rxd_pin: NO_PIN
+#          rts_pin: NO_PIN
+#          cts_pin: NO_PIN
+#          baud: 115200
+#          mode: 8N1
+
 
     motor1:
-      limit_neg_pin: NO_PIN
-      limit_pos_pin: NO_PIN
-      limit_all_pin: NO_PIN
+#      limit_neg_pin: NO_PIN
+#      limit_pos_pin: NO_PIN
+#      limit_all_pin: NO_PIN
       hard_limits: false
       pulloff_mm: 1.000
       tmc_2209:
-        cs_pin: NO_PIN
         disable_pin: I2SO.12
         step_pin: I2SO.13
         direction_pin: I2SO.14
         r_sense_ohms: 0.110
-        run_amps: 0.750
+        run_amps: 1.200
         hold_amps: 0.250
         microsteps: 32
+        uart:
+##          txd_pin: gpio.22
+##          rxd_pin: gpio.21
+#          txd_pin: NO_PIN
+#          rxd_pin: NO_PIN
+#          rts_pin: NO_PIN
+#          cts_pin: NO_PIN
+#          baud: 115200
+#          mode: 8N1
 
   z:
     steps_per_mm: 500.000
@@ -116,20 +133,27 @@ axes:
       settle_ms: 500
 
     motor0:
-      limit_neg_pin: gpio.32:low
-      limit_pos_pin: NO_PIN
-      limit_all_pin: NO_PIN
+      limit_neg_pin: gpio.22:low
+#      limit_pos_pin: NO_PIN
+#      limit_all_pin: NO_PIN
       hard_limits: false
       pulloff_mm: 1.000
       tmc_2209:
-        cs_pin: NO_PIN
-        disable_pin: I2SO.6
         step_pin: I2SO.7
         direction_pin: I2SO.8
         r_sense_ohms: 0.110
-        run_amps: 0.750
+        run_amps: 1.200
         hold_amps: 0.250
         microsteps: 32
+        uart:
+##          txd_pin: gpio.22
+##          rxd_pin: gpio.21
+#          txd_pin: NO_PIN
+#          rxd_pin: NO_PIN
+#          rts_pin: NO_PIN
+#          cts_pin: NO_PIN
+#          baud: 115200
+#          mode: 8N1
 
 i2so:
   bck_pin: gpio.25
@@ -149,17 +173,16 @@ coolant:
   flood_pin: I2SO.22
   mist_pin:  I2SO.23
 
-probe:
-control:
-  safety_door_pin: NO_PIN
-  reset_pin: NO_PIN
-  feed_hold_pin: NO_PIN
-  cycle_start_pin: NO_PIN
-  macro0_pin: NO_PIN
-  macro1_pin: NO_PIN
-  macro2_pin: NO_PIN
-  macro3_pin: NO_PIN
-  pin: gpio.32:low:pu
+#probe:
+#control:
+#  safety_door_pin: NO_PIN
+#  reset_pin: NO_PIN
+#  feed_hold_pin: NO_PIN
+#  cycle_start_pin: NO_PIN
+#  macro0_pin: NO_PIN
+#  macro1_pin: NO_PIN
+#  macro2_pin: NO_PIN
+#  macro3_pin: NO_PIN
 
 PWM:
   pwm_hz: 5000
@@ -176,23 +199,23 @@ PWM:
 start:
   must_home: false
 
-LCD:
-  BEEPER: I2SO.21
-  LCD_EN: gpio21
-  LCD_RS: gpio4
-  LCD_D4: gpio0
-  LCD_D5: gpio16
-  LCD_D6: gpio15
-  LCD_D7: gpio17
-  BTN_ENC: gpio13
-
-  BTN_EN1: gpio14
-  BTN_EN2: gpio12
-  SPI_DET: gpio34
-  SPI_SCK: gpio18
-  SPI_CS: gpio5
-  SPI_MISO: gpio19
-  SPI_MOSI: gpio23
+#LCD:
+#  BEEPER: I2SO.21
+#  LCD_EN: gpio21
+#  LCD_RS: gpio4
+#  LCD_D4: gpio0
+#  LCD_D5: gpio16
+#  LCD_D6: gpio15
+#  LCD_D7: gpio17
+#  BTN_ENC: gpio13
+#
+#  BTN_EN1: gpio14
+#  BTN_EN2: gpio12
+#  SPI_DET: gpio34
+#  SPI_SCK: gpio18
+#  SPI_CS: gpio5
+#  SPI_MISO: gpio19
+#  SPI_MOSI: gpio23
 
  # USB  TX0(1)  RX0(3)
  # J3-> TX2(17) RX2(16)
