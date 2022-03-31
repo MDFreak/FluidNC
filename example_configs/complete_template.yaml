@@ -21,7 +21,7 @@ axes:         #Axes,oject
     max_rate_mm_per_min: 1000 # 4000.000 # Max_rate (mm/min)
     acceleration_mm_per_sec2: 0 # 50.000 # Acceleration (mm/sec^2), number
     max_travel_mm: 300.000
-    soft_limits: false
+    soft_limits: false # Soft_limits, boolean
     homing:
       cycle: 1
       positive_direction: true
