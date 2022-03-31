@@ -1,16 +1,21 @@
-name: "Fysetc Ant CoreXY"
-board: "Fysetc E4"
+board: ""     #Board, string
+name:  ""     #Name, string
+meta:  ""     #Meta, string
+stepping:     #Stepping, object
+  engine: ""  #Engine, string
+              # "Timed"
+              # "RMT"
+              # "I2S_STREAM"
+              # "I2S_STATIC"
 
-stepping:
-  engine: RMT
-  idle_ms: 255
-  dir_delay_us: 1
-  pulse_us: 2
-  disable_delay_us: 0
+  idle_ms:      255   #Idle_ms, integer, max 255
+  pulse_us:     2     #Puls_us, integer
+  dir_delay_us: 1     #Dir_delay_us, integer
+  disable_delay_us: 0 #Disable_delay_us, integer
 
-axes:
-  shared_stepper_disable_pin: gpio.25:high
-  
+axes:         #Axes,oject
+  shared_stepper_disable_pin: NO_PIN
+
   x:
     steps_per_mm: 100.000
     max_rate_mm_per_min: 4000.000
