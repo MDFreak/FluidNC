@@ -3,7 +3,7 @@ board: MKS_TINYBEE_1V0
 stepping:
   engine: I2S_STREAM
   idle_ms: 250
-  pulse_us: 2
+  pulse_us: 4
   dir_delay_us: 1
   disable_delay_us: 0
 
@@ -24,9 +24,9 @@ axes:
       settle_ms: 500
 
     motor0:
-      limit_neg_pin: gpio.33:low
+#      limit_neg_pin: NO_PIN
 #      limit_pos_pin: NO_PIN
-#      limit_all_pin: NO_PIN
+      limit_all_pin: gpio.33:low
       hard_limits: false
       pulloff_mm: 1.000
       tmc_2209:
@@ -40,9 +40,6 @@ axes:
         uart:
 
     motor1:
-#      limit_neg_pin: NO_PIN
-#      limit_pos_pin: NO_PIN
-#      limit_all_pin: NO_PIN
       hard_limits: false
       pulloff_mm: 1.000
       tmc_2209:
@@ -71,8 +68,6 @@ axes:
 
     motor0:
       limit_neg_pin: gpio.32:low
-#      limit_pos_pin: NO_PIN
-#      limit_all_pin: NO_PIN
       hard_limits: false
       pulloff_mm: 1.000
       tmc_2209:
@@ -86,18 +81,11 @@ axes:
         uart:
 ##          txd_pin: gpio.22
 ##          rxd_pin: gpio.21
-#          txd_pin: NO_PIN
-#          rxd_pin: NO_PIN
-#          rts_pin: NO_PIN
-#          cts_pin: NO_PIN
 #          baud: 115200
 #          mode: 8N1
 
 
     motor1:
-#      limit_neg_pin: NO_PIN
-#      limit_pos_pin: NO_PIN
-#      limit_all_pin: NO_PIN
       hard_limits: false
       pulloff_mm: 1.000
       tmc_2209:
@@ -111,10 +99,6 @@ axes:
         uart:
 ##          txd_pin: gpio.22
 ##          rxd_pin: gpio.21
-#          txd_pin: NO_PIN
-#          rxd_pin: NO_PIN
-#          rts_pin: NO_PIN
-#          cts_pin: NO_PIN
 #          baud: 115200
 #          mode: 8N1
 
@@ -134,8 +118,6 @@ axes:
 
     motor0:
       limit_neg_pin: gpio.22:low
-#      limit_pos_pin: NO_PIN
-#      limit_all_pin: NO_PIN
       hard_limits: false
       pulloff_mm: 1.000
       tmc_2209:
@@ -148,10 +130,6 @@ axes:
         uart:
 ##          txd_pin: gpio.22
 ##          rxd_pin: gpio.21
-#          txd_pin: NO_PIN
-#          rxd_pin: NO_PIN
-#          rts_pin: NO_PIN
-#          cts_pin: NO_PIN
 #          baud: 115200
 #          mode: 8N1
 
@@ -167,7 +145,6 @@ spi:
 
 sdcard:
   cs_pin: gpio.5
-  card_detect_pin: NO_PIN
 
 coolant:
   flood_pin: I2SO.22
@@ -188,7 +165,6 @@ PWM:
   pwm_hz: 5000
   output_pin: I2SO.16
   enable_pin: gpio.12
-  direction_pin: NO_PIN
   disable_with_s0: false
   s0_with_disable: true
   spinup_ms: 0
