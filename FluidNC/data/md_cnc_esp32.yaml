@@ -9,125 +9,125 @@ stepping:
 
 axes:
   shared_stepper_disable_pin: NO_PIN
-  x:
-    steps_per_mm: 500.000
-    max_rate_mm_per_min: 800.000
-    acceleration_mm_per_sec2: 25
-    max_travel_mm: 100.000
-    soft_limits: false
-    homing:
+  # x:
+  #  steps_per_mm: 6400.000
+  #  max_rate_mm_per_min: 800.000
+  #  acceleration_mm_per_sec2: 25
+  #  max_travel_mm: 100.000
+  #  soft_limits: false
+  #  homing:
+  #    cycle: 1
+  #    positive_direction: false
+  #    mpos_mm: 150.000
+  #    feed_mm_per_min: 100.000
+  #    seek_mm_per_min: 200.000
+  #    settle_ms: 500
+#
+  #  motor0:
+  #    limit_neg_pin: NO_PIN
+  #    limit_pos_pin: NO_PIN
+  #    limit_all_pin: gpio.33:low
+  #    hard_limits: true
+  #    pulloff_mm: 1.000
+  #    tmc_2209:
+  #      disable_pin: I2SO.0
+  #      step_pin: I2SO.1
+  #      direction_pin: I2SO.2
+  #      r_sense_ohms: 0.110
+  #      run_amps: 1.200
+  #      hold_amps: 0.250
+  #      microsteps: 64
+  #      uart:
+#
+  #  motor1:
+  #    pulloff_mm: 1.000
+  #    tmc_2209:
+  #      disable_pin: I2SO.9
+  #      step_pin: I2SO.10
+  #      direction_pin: I2SO.11
+  #      r_sense_ohms: 0.110
+  #      run_amps: 1.200
+  #      hold_amps: 0.250
+  #      microsteps: 64
+  #      uart:
+#
+  #y:
+  #  steps_per_mm: 6400.000
+  #  max_rate_mm_per_min: 800.000
+  #  acceleration_mm_per_sec2: 25
+  #  max_travel_mm: 100.000
+  #  homing:
+  #    cycle: 1
+  #    positive_direction: false
+  #    mpos_mm: 150.000
+  #    settle_ms: 500
+#
+  #  motor0:
+  #    limit_all_pin: gpio.32:low
+  #    hard_limits: true
+  #    pulloff_mm: 1.000
+  #    tmc_2209:
+  #      disable_pin: I2SO.3
+  #      step_pin: I2SO.4
+  #      direction_pin: I2SO.5
+  #      r_sense_ohms: 0.110
+  #      run_amps: 1.200
+  #      hold_amps: 0.250
+  #      microsteps: 64
+  #      uart:
+###          txd_pin: gpio.22
+###          rxd_pin: gpio.21
+# #         baud: 115200
+# #         mode: 8N1
+#
+#
+  #  motor1:
+  #    hard_limits: false
+  #    pulloff_mm: 1.000
+  #    tmc_2209:
+  #      disable_pin: I2SO.12
+  #      step_pin: I2SO.13
+  #      direction_pin: I2SO.14
+  #      r_sense_ohms: 0.110
+  #      run_amps: 1.200
+  #      hold_amps: 0.250
+  #      microsteps: 64
+  #      uart:
+###          txd_pin: gpio.22
+###          rxd_pin: gpio.21
+# #         baud: 115200
+# #         mode: 8N1
+#
+  #z:
+  #  steps_per_mm: 500.000
+  #  max_rate_mm_per_min: 800.000
+  #  acceleration_mm_per_sec2: 25
+  #  max_travel_mm: 100.000
+  #  soft_limits: false
+  #  homing:
       cycle: 1
       positive_direction: false
       mpos_mm: 150.000
       feed_mm_per_min: 100.000
       seek_mm_per_min: 200.000
       settle_ms: 500
-
-    motor0:
-      limit_neg_pin: NO_PIN
-      limit_pos_pin: NO_PIN
-      limit_all_pin: gpio.33:low
-      hard_limits: true
-      pulloff_mm: 1.000
-      tmc_2209:
-        disable_pin: I2SO.0
-        step_pin: I2SO.1
-        direction_pin: I2SO.2
-        r_sense_ohms: 0.110
-        run_amps: 1.200
-        hold_amps: 0.250
-        microsteps: 32
-        uart:
-
-    motor1:
-      pulloff_mm: 1.000
-      tmc_2209:
-        disable_pin: I2SO.9
-        step_pin: I2SO.10
-        direction_pin: I2SO.11
-        r_sense_ohms: 0.110
-        run_amps: 1.200
-        hold_amps: 0.250
-        microsteps: 32
-        uart:
-
-  y:
-    steps_per_mm: 500.000
-    max_rate_mm_per_min: 800.000
-    acceleration_mm_per_sec2: 25
-    max_travel_mm: 100.000
-    homing:
-      cycle: 1
-      positive_direction: false
-      mpos_mm: 150.000
-      settle_ms: 500
-
-    motor0:
-      limit_all_pin: gpio.32:low
-      hard_limits: true
-      pulloff_mm: 1.000
-      tmc_2209:
-        disable_pin: I2SO.3
-        step_pin: I2SO.4
-        direction_pin: I2SO.5
-        r_sense_ohms: 0.110
-        run_amps: 1.200
-        hold_amps: 0.250
-        microsteps: 32
-        uart:
-##          txd_pin: gpio.22
-##          rxd_pin: gpio.21
-#          baud: 115200
-#          mode: 8N1
-
-
-    motor1:
-      hard_limits: false
-      pulloff_mm: 1.000
-      tmc_2209:
-        disable_pin: I2SO.12
-        step_pin: I2SO.13
-        direction_pin: I2SO.14
-        r_sense_ohms: 0.110
-        run_amps: 1.200
-        hold_amps: 0.250
-        microsteps: 32
-        uart:
-##          txd_pin: gpio.22
-##          rxd_pin: gpio.21
-#          baud: 115200
-#          mode: 8N1
-
-  z:
-    steps_per_mm: 500.000
-    max_rate_mm_per_min: 800.000
-    acceleration_mm_per_sec2: 25
-    max_travel_mm: 100.000
-    soft_limits: false
-    homing:
-      cycle: 1
-      positive_direction: false
-      mpos_mm: 150.000
-      feed_mm_per_min: 100.000
-      seek_mm_per_min: 200.000
-      settle_ms: 500
-
-    motor0:
-      limit_neg_pin: gpio.22:low
-      hard_limits: false
-      pulloff_mm: 1.000
-      tmc_2209:
-        step_pin: I2SO.7
-        direction_pin: I2SO.8
-        r_sense_ohms: 0.110
-        run_amps: 1.200
-        hold_amps: 0.250
-        microsteps: 32
-        uart:
-##          txd_pin: gpio.22
-##          rxd_pin: gpio.21
-#          baud: 115200
-#          mode: 8N1
+#
+  #  motor0:
+  #    limit_neg_pin: gpio.22:low
+  #    hard_limits: false
+  #    pulloff_mm: 1.000
+  #    tmc_2209:
+  #      step_pin: I2SO.7
+  #      direction_pin: I2SO.8
+  #      r_sense_ohms: 0.110
+  #      run_amps: 1.200
+  #      hold_amps: 0.250
+  #      microsteps: 64
+  #      uart:
+###          txd_pin: gpio.22
+###          rxd_pin: gpio.21
+# #         baud: 115200
+# #         mode: 8N1
 
 i2so:
   bck_pin: gpio.25
@@ -159,8 +159,8 @@ coolant:
 
 PWM:
   pwm_hz: 5000
-  output_pin: I2SO.16
-  enable_pin: gpio.12
+  output_pin: gpio.12
+  enable_pin: I2SO.16
   disable_with_s0: false
   s0_with_disable: true
   spinup_ms: 0
@@ -197,7 +197,7 @@ start:
  # FAN1(I2SO.19)  FAN2(I2SO.20)
  #                   EXP1                                   EXP2
  #(BEEPER) I2SO.21 | 1  2 | 13 (BTN_ENC)    (SPI MISO) 19 | 1  2 | 18 (SPI SCK)
- #    (LCD_EN)  21 | 3  4 |  4 (LCD_RS)      (BTN_EN1) 14 | 3  4 |  5 (SPI CS)
+ #    (                                                                                                                                                                                                                                                      LCD_EN)  21 | 3  4 |  4 (LCD_RS)      (BTN_EN1) 14 | 3  4 |  5 (SPI CS)
  #    (LCD_D4)   0 | 5  6   16 (LCD_D5)      (BTN_EN2) 12 | 5  6   23 (SPI MOSI)
  #    (LCD_D6)  15 | 7  8 | 17 (LCD_D7)      (SPI_DET) 34 | 7  8 | RESET
  #             GND | 9 10 | 5V                        GND | 9 10 | 3.3V
