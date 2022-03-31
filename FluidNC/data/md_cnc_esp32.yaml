@@ -7,15 +7,16 @@ i2so:
   data_pin: gpio.27
 
 spi:
+  cs_pin: gpio.5
   miso_pin: gpio.19
   mosi_pin: gpio.23
   sck_pin: gpio.18
 
 sdcard:
-  cs_pin: gpio.5
+  card_detect_pin: gpio.34
 
 stepping:
-  engine: I2S_STREAM
+  engine: I2S_STATIC
   idle_ms: 250
   pulse_us: 4
   dir_delay_us: 1
