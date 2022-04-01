@@ -70,7 +70,7 @@ axes:
       limit_all_pin: gpio.32
       hard_limits: false
       pulloff_mm: 1.000
-      stepatick:
+      stepstick:
         disable_pin: I2SO.3
         step_pin: I2SO.4
         direction_pin: I2SO.5
@@ -107,7 +107,7 @@ axes:
     max_rate_mm_per_min: 800.000
     acceleration_mm_per_sec2: 25
     max_travel_mm: 100.000
-    soft_limits: true
+    soft_limits: false
     homing:
       cycle: 0
       positive_direction: false
@@ -145,6 +145,7 @@ spi:
   miso_pin: gpio.19
   mosi_pin: gpio.23
   sck_pin: gpio.18
+  #spi_det: gpio.34
 
 sdcard:
   cs_pin: gpio.5
@@ -171,8 +172,8 @@ PWM:
   pwm_hz: 5000
   #output_pin: gpio.12
   #enable_pin: I2SO.16
-  output_pin: I2SO.16
-  enable_pin: gpio.12
+  output_pin: gpio.12
+  enable_pin: I2SO.16
   disable_with_s0: false
   s0_with_disable: true
   spinup_ms: 0
@@ -183,23 +184,21 @@ PWM:
 start:
   must_home: false
 
-#LCD:
-#  BEEPER: I2SO.21
-#  LCD_EN: gpio21
-#  LCD_RS: gpio4
-#  LCD_D4: gpio0
-#  LCD_D5: gpio16
-#  LCD_D6: gpio15
-#  LCD_D7: gpio17
-#  BTN_ENC: gpio13
-#
-#  BTN_EN1: gpio14
-#  BTN_EN2: gpio12
-#  SPI_DET: gpio34
-#  SPI_SCK: gpio18
-#  SPI_CS: gpio5
-#  SPI_MISO: gpio19
-#  SPI_MOSI: gpio23
+beeper: I2SO.21:low
+lcd_en: gpio21
+lcd_rs: gpio4
+lcd_d4: gpio0
+lcd_d5: gpio16
+lcd_d6: gpio15
+lcd_d7: gpio17
+btn_enc: gpio13
+btn_enc1: gpio14
+btn_enc2: gpio12
+spi_det: gpio34
+spi_sck: gpio18
+spi_cs: gpio5
+spi_miso: gpio19
+spi_mosi: gpio23
 
  # USB  TX0(1)  RX0(3)
  # J3-> TX2(17) RX2(16)
@@ -209,7 +208,7 @@ start:
  # FAN1(I2SO.19)  FAN2(I2SO.20)
  #                   EXP1                                   EXP2
  #(BEEPER) I2SO.21 | 1  2 | 13 (BTN_ENC)    (SPI MISO) 19 | 1  2 | 18 (SPI SCK)
- #    (                                                                                                                                                                                                                                                      LCD_EN)  21 | 3  4 |  4 (LCD_RS)      (BTN_EN1) 14 | 3  4 |  5 (SPI CS)
+ #    (LCD_EN)  21 | 3  4 |  4 (LCD_RS)      (BTN_EN1) 14 | 3  4 |  5 (SPI CS)
  #    (LCD_D4)   0 | 5  6   16 (LCD_D5)      (BTN_EN2) 12 | 5  6   23 (SPI MOSI)
  #    (LCD_D6)  15 | 7  8 | 17 (LCD_D7)      (SPI_DET) 34 | 7  8 | RESET
  #             GND | 9 10 | 5V                        GND | 9 10 | 3.3V
