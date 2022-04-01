@@ -184,21 +184,23 @@ PWM:
 start:
   must_home: false
 
-beeper: I2SO.21:low
-lcd_en: gpio21
-lcd_rs: gpio4
-lcd_d4: gpio0
-lcd_d5: gpio16
-lcd_d6: gpio15
-lcd_d7: gpio17
-btn_enc: gpio13
-btn_enc1: gpio14
-btn_enc2: gpio12
-spi_det: gpio34
-spi_sck: gpio18
-spi_cs: gpio5
-spi_miso: gpio19
-spi_mosi: gpio23
+mks_mini:
+  beeper: I2SO.21
+  lcd_en: gpio21
+  btn_enc: gpio13
+  lcd_rs: gpio4
+  lcd_d4: gpio0
+  lcd_d5: gpio16
+  lcd_d6: gpio15
+  lcd_d7: gpio17
+
+  spi_miso: gpio19
+  spi_sck: gpio18
+  btn_enc1: gpio14
+  spi_cs: gpio5
+  btn_enc2: gpio12
+  spi_mosi: gpio23
+  spi_det: gpio34
 
  # USB  TX0(1)  RX0(3)
  # J3-> TX2(17) RX2(16)
