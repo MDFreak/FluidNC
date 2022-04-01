@@ -2,14 +2,13 @@ name: MD_CNC_ESP32
 board: MKS_TINYBEE_1V0
 
 stepping:
-  engine: I2S_STREAM
-  idle_ms: 250
+  engine: I2S_STATIC
+  idle_ms: 0
   pulse_us: 4
   dir_delay_us: 1
   disable_delay_us: 0
 
 axes:
-  shared_stepper_disable_pin: NO_PIN
   x:
     steps_per_mm: 6400.000
     max_rate_mm_per_min: 800.000
@@ -17,62 +16,64 @@ axes:
     max_travel_mm: 100.000
     soft_limits: false
     homing:
-      cycle: 1
+      cycle: 0
       positive_direction: false
       mpos_mm: 150.000
       feed_mm_per_min: 100.000
       seek_mm_per_min: 200.000
       settle_ms: 500
+      seek_scaler: 1.100
+      feed_scaler: 1.100
 
     motor0:
-      limit_neg_pin: gpio.33:low
-      # limit_pos_pin: NO_PIN
-      # limit_all_pin: gpio.33:low
-      hard_limits: true
+      limit_neg_pin: gpio.33
+      hard_limits: false
       pulloff_mm: 1.000
-      tmc_2209:
+      stepstick:
         disable_pin: I2SO.0
         step_pin: I2SO.1
         direction_pin: I2SO.2
-        use_enable: true
-        r_sense_ohms: 0.110
-        run_amps: 1.200
-        hold_amps: 0.250
-        microsteps: 64
-        uart:
+        #use_enable: true
+        #r_sense_ohms: 0.110
+        #run_amps: 1.200
+        #hold_amps: 0.250
+        #microsteps: 64
+        #uart:
 
     motor1:
       pulloff_mm: 1.000
-      tmc_2209:
+      stepstick:
         disable_pin: I2SO.9
         step_pin: I2SO.10
         direction_pin: I2SO.11
-        use_enable: true
-        r_sense_ohms: 0.110
-        run_amps: 1.200
-        hold_amps: 0.250
-        microsteps: 64
-        uart:
+        #use_enable: true
+        #r_sense_ohms: 0.110
+        #run_amps: 1.200
+        #hold_amps: 0.250
+        #microsteps: 64
+        #uart:
 
   y:
-  #  steps_per_mm: 6400.000
-  #  max_rate_mm_per_min: 800.000
-  #  acceleration_mm_per_sec2: 25
-  #  max_travel_mm: 100.000
-  #  homing:
-  #    cycle: 1
-  #    positive_direction: false
-  #    mpos_mm: 150.000
-  #    settle_ms: 500
+    steps_per_mm: 6400.000
+    max_rate_mm_per_min: 800.000
+    acceleration_mm_per_sec2: 25
+    max_travel_mm: 100.000
+    homing:
+      cycle: 1
+      positive_direction: false
+      mpos_mm: 0.000
+      settle_ms: 500
+      seek_scaler: 1.100
+      feed_scaler: 1.100
 
     motor0:
-  #    limit_all_pin: gpio.32:low
-  #    hard_limits: true
-  #    pulloff_mm: 1.000
-  #    tmc_2209:
-  #      disable_pin: I2SO.3
-  #      step_pin: I2SO.4
-  #      direction_pin: I2SO.5
+      limit_all_pin: gpio.32
+      hard_limits: false
+      pulloff_mm: 1.000
+      stepatick:
+        disable_pin: I2SO.3
+        step_pin: I2SO.4
+        direction_pin: I2SO.5
   #      r_sense_ohms: 0.110
   #      run_amps: 1.200
   #      hold_amps: 0.250
@@ -85,12 +86,12 @@ axes:
 
 
     motor1:
-  #    hard_limits: false
-  #    pulloff_mm: 1.000
-  #    tmc_2209:
-  #      disable_pin: I2SO.12
-  #      step_pin: I2SO.13
-  #      direction_pin: I2SO.14
+      hard_limits: false
+      pulloff_mm: 1.000
+      stepstick:
+        disable_pin: I2SO.12
+        step_pin: I2SO.13
+        direction_pin: I2SO.14
   #      r_sense_ohms: 0.110
   #      run_amps: 1.200
   #      hold_amps: 0.250
@@ -102,26 +103,29 @@ axes:
 # #         mode: 8N1
 #
   z:
-  #  steps_per_mm: 500.000
-  #  max_rate_mm_per_min: 800.000
-  #  acceleration_mm_per_sec2: 25
-  #  max_travel_mm: 100.000
-  #  soft_limits: false
-  #  homing:
-  #    cycle: 1
-  #    positive_direction: false
-  #    mpos_mm: 150.000
-  #    feed_mm_per_min: 100.000
-  #    seek_mm_per_min: 200.000
-  #    settle_ms: 500
+    steps_per_mm: 500.000
+    max_rate_mm_per_min: 800.000
+    acceleration_mm_per_sec2: 25
+    max_travel_mm: 100.000
+    soft_limits: true
+    homing:
+      cycle: 0
+      positive_direction: false
+      mpos_mm: 150.000
+      feed_mm_per_min: 100.000
+      seek_mm_per_min: 200.000
+      settle_ms: 500
+      seek_scaler: 1.100
+      feed_scaler: 1.100
 
     motor0:
-  #    limit_neg_pin: gpio.22:low
-  #    hard_limits: false
-  #    pulloff_mm: 1.000
-  #    tmc_2209:
-  #      step_pin: I2SO.7
-  #      direction_pin: I2SO.8
+      limit_neg_pin: gpio.22
+      hard_limits: false
+      pulloff_mm: 1.000
+      stepstick:
+        disable_pin: I2SO.6
+        step_pin: I2SO.7
+        direction_pin: I2SO.8
   #      r_sense_ohms: 0.110
   #      run_amps: 1.200
   #      hold_amps: 0.250
@@ -132,35 +136,36 @@ axes:
 # #         baud: 115200
 # #         mode: 8N1
 
-coolant:
-  flood_pin: I2SO.22
-  mist_pin:  I2SO.23
-
 i2so:
   bck_pin: gpio.25
   ws_pin: gpio.26
   data_pin: gpio.27
 
 spi:
-  cs_pin: gpio.5
   miso_pin: gpio.19
   mosi_pin: gpio.23
   sck_pin: gpio.18
 
 sdcard:
-  #card_detect_pin: gpio.34
+  cs_pin: gpio.5
+  card_detect_pin: NO_PIN
 
 #probe:
 control:
-  use_line_numbers: true
-#  safety_door_pin: NO_PIN
-#  reset_pin: NO_PIN
-#  feed_hold_pin: NO_PIN
-#  cycle_start_pin: NO_PIN
-#  macro0_pin: NO_PIN
-#  macro1_pin: NO_PIN
-#  macro2_pin: NO_PIN
-#  macro3_pin: NO_PIN
+#  use_line_numbers: true
+  safety_door_pin: NO_PIN
+  reset_pin: NO_PIN
+  feed_hold_pin: NO_PIN
+  cycle_start_pin: NO_PIN
+  macro0_pin: NO_PIN
+  macro1_pin: NO_PIN
+  macro2_pin: NO_PIN
+  macro3_pin: NO_PIN
+
+coolant:
+  flood_pin: I2SO.22
+  mist_pin:  I2SO.23
+  delay_ms: 0
 
 PWM:
   pwm_hz: 5000
