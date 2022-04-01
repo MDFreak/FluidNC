@@ -12,7 +12,7 @@
 
 #include <vector>
 
-// #define DEBUG_VERBOSE_YAML_PARSER
+ #define DEBUG_VERBOSE_YAML_PARSER
 // #define DEBUG_CHATTY_YAML_PARSER
 namespace Configuration {
     class ParserHandler : public Configuration::HandlerBase {

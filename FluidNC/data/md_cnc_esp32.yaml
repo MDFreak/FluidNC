@@ -1,5 +1,9 @@
 name: MD_CNC_ESP32
 board: MKS_TINYBEE_1V0
+meta: (01.04.2022) by MDFreak
+
+kinematics:
+  Cartesian:
 
 stepping:
   engine: I2S_STATIC
@@ -11,7 +15,7 @@ stepping:
 axes:
   x:
     steps_per_mm: 6400.000
-    max_rate_mm_per_min: 5000.000
+    max_rate_mm_per_min: 10000.000
     acceleration_mm_per_sec2: 25
     max_travel_mm: 100.000
     soft_limits: false
@@ -20,7 +24,7 @@ axes:
       positive_direction: false
       mpos_mm: 150.000
       feed_mm_per_min: 100.000
-      seek_mm_per_min: 200.000
+      seek_mm_per_min: 1000.000
       settle_ms: 500
       seek_scaler: 1.100
       feed_scaler: 1.100
@@ -33,12 +37,7 @@ axes:
         disable_pin: I2SO.0
         step_pin: I2SO.1
         direction_pin: I2SO.2
-        use_enable: true
-        #r_sense_ohms: 0.110
-        #run_amps: 1.200
-        #hold_amps: 0.250
-        #microsteps: 64
-        #uart:
+        #use_enable: true
 
     motor1:
       pulloff_mm: 1.000
@@ -46,13 +45,6 @@ axes:
         disable_pin: I2SO.9
         step_pin: I2SO.10
         direction_pin: I2SO.11
-        #use_enable: true
-        #r_sense_ohms: 0.110
-        #run_amps: 1.200
-        #hold_amps: 0.250
-        #microsteps: 64
-        #uart:
-
   y:
     steps_per_mm: 6400.000
     max_rate_mm_per_min: 5000.000
@@ -65,7 +57,6 @@ axes:
       settle_ms: 500
       seek_scaler: 1.100
       feed_scaler: 1.100
-
     motor0:
       limit_all_pin: gpio.32
       hard_limits: false
@@ -74,17 +65,6 @@ axes:
         disable_pin: I2SO.3
         step_pin: I2SO.4
         direction_pin: I2SO.5
-  #      r_sense_ohms: 0.110
-  #      run_amps: 1.200
-  #      hold_amps: 0.250
-  #      microsteps: 64
-  #      uart:
-###          txd_pin: gpio.22
-###          rxd_pin: gpio.21
-# #         baud: 115200
-# #         mode: 8N1
-
-
     motor1:
       hard_limits: false
       pulloff_mm: 1.000
@@ -92,16 +72,7 @@ axes:
         disable_pin: I2SO.12
         step_pin: I2SO.13
         direction_pin: I2SO.14
-  #      r_sense_ohms: 0.110
-  #      run_amps: 1.200
-  #      hold_amps: 0.250
-        #microsteps: 64
-  #      uart:
-###          txd_pin: gpio.22
-###          rxd_pin: gpio.21
-# #         baud: 115200
-# #         mode: 8N1
-#
+
   z:
     steps_per_mm: 500.000
     max_rate_mm_per_min: 800.000
@@ -117,7 +88,6 @@ axes:
       settle_ms: 500
       seek_scaler: 1.100
       feed_scaler: 1.100
-
     motor0:
       limit_neg_pin: gpio.22
       hard_limits: false
@@ -126,15 +96,6 @@ axes:
         disable_pin: I2SO.6
         step_pin: I2SO.7
         direction_pin: I2SO.8
-  #      r_sense_ohms: 0.110
-  #      run_amps: 1.200
-  #      hold_amps: 0.250
-  #      microsteps: 64
-  #      uart:
-###          txd_pin: gpio.22
-###          rxd_pin: gpio.21
-# #         baud: 115200
-# #         mode: 8N1
 
 i2so:
   bck_pin: gpio.25
@@ -145,62 +106,57 @@ spi:
   miso_pin: gpio.19
   mosi_pin: gpio.23
   sck_pin: gpio.18
-  #spi_det: gpio.34
 
 sdcard:
   cs_pin: gpio.5
   card_detect_pin: NO_PIN
 
-#probe:
-control:
-#  use_line_numbers: true
-  safety_door_pin: NO_PIN
-  reset_pin: NO_PIN
-  feed_hold_pin: NO_PIN
-  cycle_start_pin: NO_PIN
-  macro0_pin: NO_PIN
-  macro1_pin: NO_PIN
-  macro2_pin: NO_PIN
-  macro3_pin: NO_PIN
+#control:
+#  safety_door_pin: NO_PIN
+#  reset_pin: NO_PIN
+#  feed_hold_pin: NO_PIN
+#  cycle_start_pin: NO_PIN
+#  macro0_pin: NO_PIN
+#  macro1_pin: NO_PIN
+#  macro2_pin: NO_PIN
+#  macro3_pin: NO_PIN
 
 coolant:
   flood_pin: I2SO.22
   mist_pin:  I2SO.23
   delay_ms: 0
 
-PWM:
-  pwm_hz: 5000
-  #output_pin: gpio.12
-  #enable_pin: I2SO.16
-  output_pin: gpio.12
-  enable_pin: I2SO.16
-  disable_with_s0: false
-  s0_with_disable: true
-  spinup_ms: 0
-  spindown_ms: 0
-  tool_num: 0
-  speed_map: 0=0% 10000=100%
+#PWM:
+#  pwm_hz: 5000
+#  output_pin: gpio.12
+#  enable_pin: I2SO.16
+#  disable_with_s0: false
+#  s0_with_disable: true
+#  spinup_ms: 0
+#  spindown_ms: 0
+#  tool_num: 0
+#  speed_map: 0=0% 10000=100%
 
 start:
   must_home: false
 
-#mks_mini:
-#  beeper: I2SO.21
-#  lcd_en: gpio21
-#  btn_enc: gpio13
-#  lcd_rs: gpio4
-#  lcd_d4: gpio0
-#  lcd_d5: gpio16
-#  lcd_d6: gpio15
-#  lcd_d7: gpio17
-#
-#  spi_miso: gpio19
-#  spi_sck: gpio18
-#  btn_enc1: gpio14
-#  spi_cs: gpio5
-#  btn_enc2: gpio12
-#  spi_mosi: gpio23
-#  spi_det: gpio34
+ #mks_mini:
+ #  beeper: I2SO.21
+ #  lcd_en: gpio21
+ #  btn_enc: gpio13
+ #  lcd_rs: gpio4
+ #  lcd_d4: gpio0
+ #  lcd_d5: gpio16
+ #  lcd_d6: gpio15
+ #  lcd_d7: gpio17
+ #
+ #  spi_miso: gpio19
+ #  spi_sck: gpio18
+ #  btn_enc1: gpio14
+ #  spi_cs: gpio5
+ #  btn_enc2: gpio12
+ #  spi_mosi: gpio23
+ #  spi_det: gpio34
 
  # USB  TX0(1)  RX0(3)
  # J3-> TX2(17) RX2(16)
