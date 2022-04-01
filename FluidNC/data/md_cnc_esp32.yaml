@@ -14,8 +14,8 @@ stepping:
 
 axes:
   x:
-    steps_per_mm: 6400.000
-    max_rate_mm_per_min: 10000.000
+    steps_per_mm: 800.000
+    max_rate_mm_per_min: 5000.000
     acceleration_mm_per_sec2: 25
     max_travel_mm: 100.000
     soft_limits: false
@@ -47,7 +47,7 @@ axes:
         direction_pin: I2SO.11
   y:
     steps_per_mm: 6400.000
-    max_rate_mm_per_min: 5000.000
+    max_rate_mm_per_min: 1000.000
     acceleration_mm_per_sec2: 25
     max_travel_mm: 100.000
     homing:
