@@ -33,10 +33,15 @@ axes:
       limit_neg_pin: gpio.33
       hard_limits: false
       pulloff_mm: 1.000
-      stepstick:
+      tmc_2209:
         disable_pin: I2SO.0
         step_pin: I2SO.1
         direction_pin: I2SO.2
+        uart:
+        #r_sense_ohms: 0.110
+        #run_amps: 1.200
+        #hold_amps: 0.500
+        #microsteps: 16
         #use_enable: true
 
     motor1:
