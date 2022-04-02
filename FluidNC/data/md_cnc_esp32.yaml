@@ -30,33 +30,32 @@ axes:
       feed_scaler: 1.100
 
     motor0:
-      limit_neg_pin: gpio.32:low
-      pulloff_mm: 1.000
-      stepstick:
-        disable_pin: I2SO.9
-        step_pin: I2SO.10
-        direction_pin: I2SO.11
-    motor1:
+      limit_neg_pin: gpio.33:low:pu
       pulloff_mm: 1.000
       stepstick:
         disable_pin: I2SO.0
         step_pin: I2SO.1
         direction_pin: I2SO.2
+    motor1:
+      pulloff_mm: 1.000
+      stepstick:
+        disable_pin: I2SO.9
+        step_pin: I2SO.10
+        direction_pin: I2SO.11:low
   y:
     steps_per_mm: 800.000
     max_rate_mm_per_min: 600.000
     acceleration_mm_per_sec2: 25
     max_travel_mm: 500.000
+    soft_limits: false
     homing:
       cycle: 0
-      positive_direction: false
       mpos_mm: 0.000
       settle_ms: 500
       seek_scaler: 1.100
       feed_scaler: 1.100
     motor0:
-      limit_neg_pin: gpio.33:low
-      hard_limits: false
+      limit_neg_pin: gpio.32:low:pu
       pulloff_mm: 1.000
       stepstick:
         disable_pin: I2SO.3
