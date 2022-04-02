@@ -21,7 +21,6 @@ axes:
     soft_limits: true
     homing:
       cycle: 0
-      positive_direction: false
       mpos_mm: 0.000
       feed_mm_per_min: 50.000
       seek_mm_per_min: 500.000
@@ -30,7 +29,7 @@ axes:
       feed_scaler: 1.100
 
     motor0:
-      limit_neg_pin: gpio.33:low:pu
+      limit_all_pin: gpio.33
       pulloff_mm: 1.000
       stepstick:
         disable_pin: I2SO.0
