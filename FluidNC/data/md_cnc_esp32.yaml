@@ -33,23 +33,23 @@ axes:
       limit_neg_pin: gpio.33
       hard_limits: false
       pulloff_mm: 1.000
-      tmc_2209:
+      stepstick:
         disable_pin: I2SO.0
         step_pin: I2SO.1
         direction_pin: I2SO.2
-        uart:
+        #uart:
         #r_sense_ohms: 0.110
         #run_amps: 1.200
         #hold_amps: 0.500
         #microsteps: 16
         #use_enable: true
 
-    motor1:
-      pulloff_mm: 1.000
-      stepstick:
-        disable_pin: I2SO.9
-        step_pin: I2SO.10
-        direction_pin: I2SO.11
+    #motor1:
+    #  pulloff_mm: 1.000
+    #  stepstick:
+    #    disable_pin: I2SO.9
+    #    step_pin: I2SO.10
+    #    direction_pin: I2SO.11
   y:
     steps_per_mm: 6400.000
     max_rate_mm_per_min: 1000.000
@@ -70,13 +70,13 @@ axes:
         disable_pin: I2SO.3
         step_pin: I2SO.4
         direction_pin: I2SO.5
-    motor1:
-      hard_limits: false
-      pulloff_mm: 1.000
-      stepstick:
-        disable_pin: I2SO.12
-        step_pin: I2SO.13
-        direction_pin: I2SO.14
+    #motor1:
+    #  hard_limits: false
+    #  pulloff_mm: 1.000
+    #  stepstick:
+    #    disable_pin: I2SO.12
+    #    step_pin: I2SO.13
+    #    direction_pin: I2SO.14
 
   z:
     steps_per_mm: 500.000
