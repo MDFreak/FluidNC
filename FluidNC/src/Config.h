@@ -35,12 +35,15 @@ const int MAX_N_AXIS = 6;
 const int BAUD_RATE = 115200;
 
 //Connect to your local AP with these credentials
-//#define CONNECT_TO_SSID  "your SSID"
-//#define SSID_PASSWORD  "your SSID password"
+// #define CONNECT_TO_SSID  "MAMD-HomeG"
+// #define SSID_PASSWORD  "ElaNanniRalf3"
+//#define CONNECT_TO_SSID  "MAMD-HomeG"   // 220407 XXXXMD
+//#define SSID_PASSWORD  "ElaNanniRalf3"  // 220407 XXXXMD
 //CONFIGURE_EYECATCH_BEGIN (DO NOT MODIFY THIS LINE)
 
 // #define ENABLE_BLUETOOTH  // enable bluetooth -- platformio: pio run -e bt
 // #define ENABLE_WIFI       // enable wifi      -- platformio: pio run -e wifi
+// #define ENABLE_WIFI  // 220407 XXXXMD // enable wifi      -- platformio: pio run -e wifi
 
 // Warning! The current authentication implementation is too weak to provide
 // security against an attacker, since passwords are stored and transmitted

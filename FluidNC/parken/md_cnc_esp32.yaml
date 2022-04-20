@@ -14,15 +14,13 @@ stepping:
 
 axes:
   x:
-    # 2 mm/rot, 200 fullstep/rot, 8 uStep/step, res 0,00123 mm, fmax 125000
     steps_per_mm: 800.000
-    max_rate_mm_per_min: 3000.000
+    max_rate_mm_per_min: 600.000
     acceleration_mm_per_sec2: 25
     max_travel_mm: 1000.000
-    soft_limits: false
+    soft_limits: true
     homing:
       cycle: 1
-      positive_direction: false
       mpos_mm: 0.000
       feed_mm_per_min: 50.000
       seek_mm_per_min: 500.000
@@ -37,7 +35,7 @@ axes:
       stepstick:
         disable_pin: I2SO.0
         step_pin: I2SO.1
-        direction_pin: I2SO.2:low
+        direction_pin: I2SO.2
     motor1:
       pulloff_mm: 1.000
       stepstick:
@@ -46,15 +44,13 @@ axes:
         direction_pin: I2SO.11:low
 
   y:
-    # 2 mm/rot, 200 fullstep/rot, 8 uStep/step, res 0,00123 mm, fmax 125000
     steps_per_mm: 800.000
     max_rate_mm_per_min: 600.000
     acceleration_mm_per_sec2: 25
     max_travel_mm: 500.000
-    soft_limits: false
+    soft_limits: true
     homing:
       cycle: 1
-      positive_direction: false
       mpos_mm: 0.000
       settle_ms: 500
       feed_mm_per_min: 50.000
@@ -68,26 +64,24 @@ axes:
       stepstick:
         disable_pin: I2SO.3
         step_pin: I2SO.4
-        direction_pin: I2SO.5:low
+        direction_pin: I2SO.5
     motor1:
       hard_limits: false
       pulloff_mm: 1.000
       stepstick:
         disable_pin: I2SO.12
         step_pin: I2SO.13
-        direction_pin: I2SO.14:low
+        direction_pin: I2SO.14
 
   z:
-    # 2 mm/rot, 200 fullstep/rot, 8 uStep/step, res 0,00125 mm, fmax 125000
     steps_per_mm: 800.000
-    max_rate_mm_per_min: 1200.000
+    max_rate_mm_per_min: 400.000
     acceleration_mm_per_sec2: 25
-    max_travel_mm: 150.000
-    soft_limits: false
+    max_travel_mm: 100.000
+    soft_limits: true
     homing:
       cycle: 0
-      positive_direction: false
-      mpos_mm: 0.000
+      mpos_mm: 150.000
       feed_mm_per_min: 20.000
       seek_mm_per_min: 200.000
       settle_ms: 500

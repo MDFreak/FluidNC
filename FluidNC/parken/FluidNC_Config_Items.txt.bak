@@ -1,0 +1,28 @@
+Names and Units
+
+All config item names should include a suffix that describes the units or type. Examples...
+
+    step_pin: All pins should have _pin as the suffix
+    pulse_us: All values of time shall include the unit like _ms or _us
+    max_travel_mm All values of length shall be specified in millimeters.
+    r_sense_ohms
+    run_amps Run current in amps
+
+Default values
+
+Most keys have default values. For pins this is usually NO_PIN. If you are not using a pin like an enable on a spindle, you do not have to specify it in your YAML file. If you do a $CD (config dump) you will see all the keys, even if you did not specify them in your YAML file.
+Documentation of each section
+
+    Top level items (no indent)
+    stepping:
+    axes:
+        Motor
+    spi:
+    sdcard:
+    control:
+    coolant:
+    probe:
+    macros:
+    user_outputs:
+    spindles
+    start:

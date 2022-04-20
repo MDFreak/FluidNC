@@ -246,7 +246,7 @@ namespace WebUI {
         wifi_ap_channel =
             new IntSetting("AP Channel", WEBSET, WA, "ESP108", "AP/Channel", DEFAULT_AP_CHANNEL, MIN_CHANNEL, MAX_CHANNEL, NULL);
         wifi_ap_ip       = new IPaddrSetting("AP Static IP", WEBSET, WA, "ESP107", "AP/IP", DEFAULT_AP_IP, NULL);
-        wifi_ap_password = new StringSetting("AP Password",
+        wifi_ap_password = new StringSetting("AP Password 12345678",
                                              WEBSET,
                                              WA,
                                              "ESP106",
