@@ -8,7 +8,7 @@ kinematics:
 stepping:
   engine: I2S_STREAM
   idle_ms: 0
-  pulse_us: 4
+  pulse_us: 3
   dir_delay_us: 1
   disable_delay_us: 0
 
@@ -16,30 +16,31 @@ axes:
   x:
     # 2 mm/rot, 200 fullstep/rot, 8 uStep/step, res 0,00123 mm, fmax 125000
     steps_per_mm: 800.000
-    max_rate_mm_per_min: 3000.000
+    max_rate_mm_per_min: 2400.000
     acceleration_mm_per_sec2: 25
     max_travel_mm: 1000.000
     soft_limits: false
     homing:
-      cycle: 1
+      cycle: 0
       positive_direction: false
+      allow_single_axis: false
       mpos_mm: 0.000
       feed_mm_per_min: 50.000
       seek_mm_per_min: 500.000
-      settle_ms: 500
+      settle_ms: 250
       seek_scaler: 1.100
       feed_scaler: 1.100
 
     motor0:
-      limit_neg_pin: gpio.33
+      limit_all_pin: gpio.13:low
       pulloff_mm: 1.000
-      hard_limits: true
+      hard_limits: false
       stepstick:
         disable_pin: I2SO.0
         step_pin: I2SO.1
         direction_pin: I2SO.2:low
     motor1:
-      pulloff_mm: 1.000
+      # pulloff_mm: 1.000
       stepstick:
         disable_pin: I2SO.9
         step_pin: I2SO.10
@@ -48,13 +49,14 @@ axes:
   y:
     # 2 mm/rot, 200 fullstep/rot, 8 uStep/step, res 0,00123 mm, fmax 125000
     steps_per_mm: 800.000
-    max_rate_mm_per_min: 600.000
+    max_rate_mm_per_min: 2400.000
     acceleration_mm_per_sec2: 25
     max_travel_mm: 500.000
     soft_limits: false
     homing:
       cycle: 1
       positive_direction: false
+      allow_single_axis: false
       mpos_mm: 0.000
       settle_ms: 500
       feed_mm_per_min: 50.000
@@ -94,7 +96,7 @@ axes:
       seek_scaler: 1.100
       feed_scaler: 1.100
     motor0:
-      limit_neg_pin: gpio.22
+      limit_neg_pin: gpio.22:low
       pulloff_mm: 1.000
       hard_limits: true
       stepstick:
