@@ -23,7 +23,7 @@ axes:
     homing:
       cycle: 1
       positive_direction: false
-      allow_single_axis: false
+      allow_single_axis: true
       mpos_mm: 0.000
       feed_mm_per_min: 50.000
       seek_mm_per_min: 300.000
@@ -56,7 +56,7 @@ axes:
     homing:
       cycle: 1
       positive_direction: false
-      allow_single_axis: false
+      allow_single_axis: true
       mpos_mm: 0.000
       settle_ms: 500
       feed_mm_per_min: 50.000
