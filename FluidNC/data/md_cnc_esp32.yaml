@@ -32,7 +32,7 @@ axes:
       feed_scaler: 1.100
 
     motor0:
-      limit_all_pin: gpio.13:low
+      limit_neg_pin: gpio.33:low
       pulloff_mm: 1.000
       hard_limits: true
       stepstick:
