@@ -24,7 +24,7 @@ axes:
       cycle: 1
       positive_direction: false
       allow_single_axis: true
-      mpos_mm: 0.000
+      mpos_mm: 0.500
       feed_mm_per_min: 50.000
       seek_mm_per_min: 300.000
       settle_ms: 250
@@ -33,7 +33,7 @@ axes:
 
     motor0:
       limit_all_pin: gpio.33:low
-      pulloff_mm: 1.000
+      pulloff_mm: 1.500
       hard_limits: true
       stepstick:
         disable_pin: I2SO.0
@@ -41,7 +41,7 @@ axes:
         direction_pin: I2SO.2:low
     motor1:
       hard_limits: true
-      pulloff_mm: 1.000
+      pulloff_mm: 1.500
       stepstick:
         disable_pin: I2SO.9
         step_pin: I2SO.10
@@ -58,7 +58,7 @@ axes:
       cycle: 1
       positive_direction: false
       allow_single_axis: true
-      mpos_mm: 0.000
+      mpos_mm: 0.500
       settle_ms: 500
       feed_mm_per_min: 50.000
       seek_mm_per_min: 200.000
@@ -66,7 +66,7 @@ axes:
       feed_scaler: 1.100
     motor0:
       limit_neg_pin: gpio.32:low
-      pulloff_mm: 1.000
+      pulloff_mm: 1.500
       hard_limits: true
       stepstick:
         disable_pin: I2SO.3
@@ -74,7 +74,7 @@ axes:
         direction_pin: I2SO.5:low
     motor1:
       hard_limits: true
-      pulloff_mm: 1.000
+      pulloff_mm: 1.500
       stepstick:
         disable_pin: I2SO.12
         step_pin: I2SO.13
@@ -83,14 +83,14 @@ axes:
   z:
     # 2 mm/rot, 200 fullstep/rot, 8 uStep/step, res 0,00125 mm, fmax 125000
     steps_per_mm: 800.000
-    max_rate_mm_per_min: 1200.000
-    acceleration_mm_per_sec2: 25
+    max_rate_mm_per_min: 500.000
+    acceleration_mm_per_sec2: 15
     max_travel_mm: 150.000
     soft_limits: false
     homing:
-      cycle: 0
+      cycle: 1
       positive_direction: false
-      mpos_mm: 0.000
+      mpos_mm: 0.500
       feed_mm_per_min: 20.000
       seek_mm_per_min: 200.000
       settle_ms: 500
@@ -98,7 +98,7 @@ axes:
       feed_scaler: 1.100
     motor0:
       limit_neg_pin: gpio.22:low
-      pulloff_mm: 1.000
+      pulloff_mm: 1.500
       hard_limits: true
       stepstick:
         disable_pin: I2SO.6
