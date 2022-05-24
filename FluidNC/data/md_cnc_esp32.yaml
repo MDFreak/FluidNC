@@ -1,6 +1,6 @@
 name: MD_CNC_ESP32
 board: MKS_TINYBEE_1V0
-meta: (01.04.2022) by MDFreak
+meta: (24.05.2022) by MDFreak
 
 kinematics:
   Cartesian:
@@ -16,10 +16,10 @@ axes:
   x:
     # 2 mm/rot, 200 fullstep/rot, 8 uStep/step, res 0,00123 mm, fmax 125000
     steps_per_mm: 800.000
-    max_rate_mm_per_min: 2400.000
+    max_rate_mm_per_min: 2000.000
     acceleration_mm_per_sec2: 25
-    max_travel_mm: 1000.000
-    soft_limits: false
+    max_travel_mm: 920.000
+    soft_limits: true
     homing:
       cycle: 1
       positive_direction: false
@@ -32,7 +32,7 @@ axes:
       feed_scaler: 1.100
 
     motor0:
-      limit_neg_pin: gpio.33:low
+      limit_all_pin: gpio.33:low
       pulloff_mm: 1.000
       hard_limits: true
       stepstick:
@@ -40,6 +40,7 @@ axes:
         step_pin: I2SO.1
         direction_pin: I2SO.2:low
     motor1:
+      hard_limits: true
       pulloff_mm: 1.000
       stepstick:
         disable_pin: I2SO.9
@@ -49,10 +50,10 @@ axes:
   y:
     # 2 mm/rot, 200 fullstep/rot, 8 uStep/step, res 0,00123 mm, fmax 125000
     steps_per_mm: 800.000
-    max_rate_mm_per_min: 2400.000
+    max_rate_mm_per_min: 2000.000
     acceleration_mm_per_sec2: 25
-    max_travel_mm: 500.000
-    soft_limits: false
+    max_travel_mm: 360.000
+    soft_limits: true
     homing:
       cycle: 1
       positive_direction: false
@@ -72,7 +73,7 @@ axes:
         step_pin: I2SO.4
         direction_pin: I2SO.5:low
     motor1:
-      hard_limits: false
+      hard_limits: true
       pulloff_mm: 1.000
       stepstick:
         disable_pin: I2SO.12
