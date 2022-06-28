@@ -94,12 +94,12 @@ void SDCard::init() {
                 _cardDetect.report("SD Card Detect");
                 init_message = false;
             }
-            log_info("SD Card cs_pin:" << _cs.name() << " dectect:" << _cardDetect.name());
+            log_info("SD Card cs_pin:" << _cs.name() << " detect:" << _cardDetect.name());
         }
     }
 
     _cs.setAttr(Pin::Attr::Output);
-    _cardDetect.setAttr(Pin::Attr::Output);
+    _cardDetect.setAttr(Pin::Attr::Input);
 }
 
 void SDCard::afterParse() {

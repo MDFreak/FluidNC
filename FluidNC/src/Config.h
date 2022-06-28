@@ -35,15 +35,12 @@ const int MAX_N_AXIS = 6;
 const int BAUD_RATE = 115200;
 
 //Connect to your local AP with these credentials
-// #define CONNECT_TO_SSID  "MAMD-HomeG"
-// #define SSID_PASSWORD  "ElaNanniRalf3"
-//#define CONNECT_TO_SSID  "MAMD-HomeG"   // 220407 XXXXMD
-//#define SSID_PASSWORD  "ElaNanniRalf3"  // 220407 XXXXMD
+//#define CONNECT_TO_SSID  "your SSID"
+//#define SSID_PASSWORD  "your SSID password"
 //CONFIGURE_EYECATCH_BEGIN (DO NOT MODIFY THIS LINE)
 
 // #define ENABLE_BLUETOOTH  // enable bluetooth -- platformio: pio run -e bt
 // #define ENABLE_WIFI       // enable wifi      -- platformio: pio run -e wifi
-// #define ENABLE_WIFI  // 220407 XXXXMD // enable wifi      -- platformio: pio run -e wifi
 
 // Warning! The current authentication implementation is too weak to provide
 // security against an attacker, since passwords are stored and transmitted
@@ -59,11 +56,6 @@ const char* const DEFAULT_USER_PWD    = "user";
 const char* const DEFAULT_ADMIN_LOGIN = "admin";
 const char* const DEFAULT_USER_LOGIN  = "user";
 #endif
-
-// Number of homing cycles performed after when the machine initially jogs to limit switches.
-// This help in preventing overshoot and should improve repeatability. This value should be one or
-// greater.
-static const uint8_t NHomingLocateCycle = 1;  // Integer (1-128)
 
 // Upon a successful probe cycle, this option provides immediately feedback of the probe coordinates
 // through an automatically generated message. If disabled, users can still access the last probe
@@ -223,5 +215,3 @@ const double PARKING_PULLOUT_INCREMENT = 5.0;    // Spindle pull-out and plunge 
 
 // INCLUDE_OLED_BASIC includes a driver for a modest sized OLED display
 // #define INCLUDE_OLED_BASIC
-
-// #define DEBUG_STEPPING

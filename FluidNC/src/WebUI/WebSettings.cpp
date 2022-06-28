@@ -23,7 +23,7 @@
 #include <cstring>
 
 #include <FS.h>
-#include <SPIFFS.h>
+#include "../LocalFS.h"
 #include <SD.h>
 
 namespace WebUI {
@@ -124,19 +124,19 @@ namespace WebUI {
         return Error::Ok;
     }
 
-    static Error SPIFFSSize(char* parameter, AuthenticationLevel auth_level, Channel& out) {  // ESP720
-        out << parameter << "SPIFFS  Total:" << formatBytes(SPIFFS.totalBytes());
-        out << " Used:" << formatBytes(SPIFFS.usedBytes()) << '\n';
+    static Error LocalFSSize(char* parameter, AuthenticationLevel auth_level, Channel& out) {  // ESP720
+        out << parameter << "LocalFS  Total:" << formatBytes(LocalFS.totalBytes());
+        out << " Used:" << formatBytes(LocalFS.usedBytes()) << '\n';
         return Error::Ok;
     }
 
-    static Error formatSpiffs(char* parameter, AuthenticationLevel auth_level, Channel& out) {  // ESP710
+    static Error formatLocalFS(char* parameter, AuthenticationLevel auth_level, Channel& out) {  // ESP710
         if (strcmp(parameter, "FORMAT") != 0) {
             out << "Parameter must be FORMAT" << '\n';
             return Error::InvalidValue;
         }
         out << "Formatting";
-        SPIFFS.format();
+        LocalFS.format();
         out << "...Done\n";
         return Error::Ok;
     }
@@ -155,22 +155,19 @@ namespace WebUI {
     }
 #endif
 
+    static Error restart(char* parameter, AuthenticationLevel auth_level, Channel& out) {
+        log_info("Restarting");
+        COMMANDS::restart_MCU();
+        return Error::Ok;
+    }
+
     static Error setSystemMode(char* parameter, AuthenticationLevel auth_level, Channel& out) {  // ESP444
         parameter = trim(parameter);
         if (strcasecmp(parameter, "RESTART") != 0) {
             out << "Parameter must be RESTART" << '\n';
             return Error::InvalidValue;
         }
-        log_info("Restarting");
-        COMMANDS::restart_MCU();
-        return Error::Ok;
-    }
-
-    static Error restart(char* parameter, AuthenticationLevel auth_level, Channel& out) {
-        parameter = trim(parameter);
-        log_info("Restarting");
-        COMMANDS::restart_MCU();
-        return Error::Ok;
+        return restart(parameter, auth_level, out);
     }
 
     static Error showSysStats(char* parameter, AuthenticationLevel auth_level, Channel& out) {  // ESP420
@@ -195,17 +192,33 @@ namespace WebUI {
     }
 
     static Error setWebSetting(char* parameter, AuthenticationLevel auth_level, Channel& out) {  // ESP401
+        // The string is of the form "P=name T=type V=value
         // We do not need the "T=" (type) parameter because the
-        // Setting objects know their own type
-        if (!split_params(parameter)) {
+        // Setting objects know their own type.  We do not use
+        // split_params because if fails if the value string
+        // contains '='
+        if (strncmp(parameter, "P=", strlen("P="))) {
             return Error::InvalidValue;
         }
-        char*       sval = get_param("V", true);
-        const char* spos = get_param("P", false);
-        if (*spos == '\0') {
-            out << "Missing parameter" << '\n';
+        char* spos = &parameter[2];
+        char* scan;
+        for (scan = spos; *scan != ' ' && *scan != '\0'; ++scan) {}
+        if (*scan == '\0') {
             return Error::InvalidValue;
         }
+        // *scan is ' ' so we have found the end of the spos string
+        *scan++ = '\0';
+
+        if (strncmp(scan, "T=", strlen("T="))) {
+            return Error::InvalidValue;
+        }
+        // Find the end of the T=type string
+        for (scan += strlen("T="); *scan != ' ' && *scan != '\0'; ++scan) {}
+        if (strncmp(scan, " V=", strlen(" V="))) {
+            return Error::InvalidValue;
+        }
+        char* sval = scan + strlen(" V=");
+
         Error ret = do_command_or_setting(spos, sval, auth_level, out);
         return ret;
     }
@@ -318,7 +331,9 @@ namespace WebUI {
             out << "Cannot find file!" << '\n';
             return Error::FsFileNotFound;
         }
-        if (file2del.isDirectory()) {
+        bool isDir = file2del.isDirectory();
+        file2del.close();
+        if (isDir) {
             if (!fs.rmdir(path)) {
                 out << "Cannot delete directory! Is directory empty?" << '\n';
                 return Error::FsFailedDelDir;
@@ -331,7 +346,6 @@ namespace WebUI {
             }
             out << "File deleted." << '\n';
         }
-        file2del.close();
         return Error::Ok;
     }
 
@@ -347,35 +361,34 @@ namespace WebUI {
     }
 
     static Error deleteLocalFile(char* parameter, AuthenticationLevel auth_level, Channel& out) {
-        return deleteObject(SPIFFS, parameter, out);
+        return deleteObject(LocalFS, parameter, out);
     }
 
-    static void listDir(fs::FS& fs, const char* dirname, size_t levels, Channel& out) {
-        File root = fs.open(dirname);
-        if (!root) {
-            report_status_message(Error::FsFailedOpenDir, out);
-            return;
-        }
+    static void listDir(fs::FS& fs, File root, String indent, size_t levels, Channel& out) {
         if (!root.isDirectory()) {
-            report_status_message(Error::FsDirNotFound, out);
+            log_info("Not directory");
+            root.close();
             return;
         }
-        File file = root.openNextFile();
-        while (file) {
+
+        File file;
+        while (file = root.openNextFile()) {
             if (file.isDirectory()) {
                 if (levels) {
-                    listDir(fs, file.name(), levels - 1, out);
+                    out << "[DIR: " << indent << file.name() << "]\n";
+                    listDir(fs, file, indent + " ", levels - 1, out);
                 }
             } else {
-                allChannels << "[FILE:" << file.name() << "|SIZE:" << file.size() << "]\n";
+                out << "[FILE:" << indent << file.name() << "|SIZE:" << file.size() << "]\n";
             }
-            file = root.openNextFile();
+            file.close();
         }
+        root.close();
     }
 
     static void listFs(fs::FS& fs, const char* fsname, size_t levels, uint64_t totalBytes, uint64_t usedBytes, Channel& out) {
         out << '\n';
-        listDir(fs, "/", levels, out);
+        listDir(fs, fs.open("/"), " ", levels, out);
         out << "[" << fsname;
         out << " Free:" << formatBytes(totalBytes - usedBytes);
         out << " Used:" << formatBytes(usedBytes);
@@ -401,20 +414,19 @@ namespace WebUI {
     }
 
     static Error listLocalFiles(char* parameter, AuthenticationLevel auth_level, Channel& out) {  // No ESP command
-        listFs(SPIFFS, "LocalFS", 10, SPIFFS.totalBytes(), SPIFFS.usedBytes(), out);
+        listFs(LocalFS, "LocalFS", 10, LocalFS.totalBytes(), LocalFS.usedBytes(), out);
         return Error::Ok;
     }
 
-    static void listDirJSON(fs::FS fs, const char* dirname, size_t levels, JSONencoder* j) {
+    static void listDirJSON(fs::FS fs, File root, size_t levels, JSONencoder* j) {
         j->begin_array("files");
-        File root = fs.open(dirname);
         File file = root.openNextFile();
         while (file) {
             const char* tailName = strchr(file.name(), '/');
             tailName             = tailName ? tailName + 1 : file.name();
             if (file.isDirectory() && levels) {
                 j->begin_array(tailName);
-                listDirJSON(fs, file.name(), levels - 1, j);
+                listDirJSON(fs, file, levels - 1, j);
                 j->end_array();
             } else {
                 j->begin_object();
@@ -422,18 +434,20 @@ namespace WebUI {
                 j->member("size", file.size());
                 j->end_object();
             }
+            file.close();
             file = root.openNextFile();
         }
+        root.close();
         j->end_array();
     }
 
     static Error listLocalFilesJSON(char* parameter, AuthenticationLevel auth_level, Channel& out) {  // No ESP command
         JSONencoder j(false, out);
         j.begin();
-        listDirJSON(SPIFFS, "/", 4, &j);
-        j.member("total", SPIFFS.totalBytes());
-        j.member("used", SPIFFS.usedBytes());
-        j.member("occupation", String(long(100 * SPIFFS.usedBytes() / SPIFFS.totalBytes())));
+        listDirJSON(LocalFS, LocalFS.open("/"), 4, &j);
+        j.member("total", LocalFS.totalBytes());
+        j.member("used", LocalFS.usedBytes());
+        j.member("occupation", String(long(100 * LocalFS.usedBytes() / LocalFS.totalBytes())));
         j.end();
         return Error::Ok;
     }
@@ -549,8 +563,8 @@ namespace WebUI {
         new WebCommand("RESTART", WEBCMD, WA, "ESP444", "System/Control", setSystemMode);
         new WebCommand("RESTART", WEBCMD, WA, NULL, "Bye", restart);
 
-        new WebCommand(NULL, WEBCMD, WU, "ESP720", "LocalFS/Size", SPIFFSSize);
-        new WebCommand("FORMAT", WEBCMD, WA, "ESP710", "LocalFS/Format", formatSpiffs);
+        new WebCommand(NULL, WEBCMD, WU, "ESP720", "LocalFS/Size", LocalFSSize);
+        new WebCommand("FORMAT", WEBCMD, WA, "ESP710", "LocalFS/Format", formatLocalFS);
         new WebCommand("path", WEBCMD, WU, "ESP701", "LocalFS/Show", showLocalFile);
         new WebCommand("path", WEBCMD, WU, "ESP700", "LocalFS/Run", runLocalFile);
         new WebCommand("path", WEBCMD, WU, NULL, "LocalFS/List", listLocalFiles);

@@ -5,7 +5,7 @@
 #pragma once
 
 #include "Configuration/Configurable.h"
-#include <esp32-hal-timer.h>  // hw_timer_t
+#include "Driver/StepTimer.h"
 
 namespace Machine {
     class Stepping : public Configuration::Configurable {
@@ -14,12 +14,9 @@ namespace Machine {
         static const uint32_t fStepperTimer = 20000000;  // frequency of step pulse timer
 
     private:
-        static const int   stepTimerNumber = 0;
-        static hw_timer_t* stepTimer;
-        static void        onStepperDriverTimer();
+        static bool onStepperDriverTimer();
 
-        static const uint32_t fTimers             = 80000000;  // the frequency of ESP32 timers
-        static const int      ticksPerMicrosecond = fStepperTimer / 1000000;
+        static const int ticksPerMicrosecond = fStepperTimer / 1000000;
 
         bool    _switchedStepper = false;
         int32_t _stepPulseEndTime;
@@ -38,6 +35,15 @@ namespace Machine {
         };
 
         Stepping() = default;
+
+        // _segments is the number of entries in the step segment buffer between the step execution algorithm
+        // and the planner blocks. Each segment is set of steps executed at a constant velocity over a
+        // fixed time defined by ACCELERATION_TICKS_PER_SECOND. They are computed such that the planner
+        // block velocity profile is traced exactly. The size of this buffer governs how much step
+        // execution lead time there is for other processes to run.  The latency for a feedhold or other
+        // override is roughly 10 ms times _segments.
+
+        size_t _segments = 12;
 
         uint8_t  _idleMsecs           = 255;
         uint32_t _pulseUsecs          = 4;

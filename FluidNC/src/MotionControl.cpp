@@ -14,6 +14,7 @@
 #include "I2SOut.h"          // i2s_out_reset
 #include "InputFile.h"       // infile
 #include "Platform.h"        // WEAK_LINK
+#include "Settings.h"        // coords
 
 #include <cmath>
 
@@ -138,7 +139,7 @@ void mc_arc(float*            target,
     }
 
     // CCW angle between position and target from circle center. Only one atan2() trig computation required.
-    float angular_travel = float(atan2(r_axis0 * rt_axis1 - r_axis1 * rt_axis0, r_axis0 * rt_axis0 + r_axis1 * rt_axis1));
+    float angular_travel = atan2f(r_axis0 * rt_axis1 - r_axis1 * rt_axis0, r_axis0 * rt_axis0 + r_axis1 * rt_axis1);
     if (is_clockwise_arc) {  // Correct atan2 output per direction
         if (angular_travel >= -ARC_ANGULAR_TRAVEL_EPSILON) {
             angular_travel -= 2 * float(M_PI);
@@ -154,7 +155,7 @@ void mc_arc(float*            target,
     // is desired, i.e. least-squares, midpoint on arc, just change the mm_per_arc_segment calculation.
     // For most uses, this value should not exceed 2000.
     uint16_t segments =
-        uint16_t(floor(fabs(0.5 * angular_travel * radius) / sqrt(config->_arcTolerance * (2 * radius - config->_arcTolerance))));
+        uint16_t(floorf(fabsf(0.5 * angular_travel * radius) / sqrtf(config->_arcTolerance * (2 * radius - config->_arcTolerance))));
     if (segments) {
         // Multiply inverse feed_rate to compensate for the fact that this movement is approximated
         // by a number of discrete segments. The inverse feed_rate should be correct for the sum of
@@ -214,8 +215,8 @@ void mc_arc(float*            target,
             } else {
                 // Arc correction to radius vector. Computed only every N_ARC_CORRECTION increments. ~375 usec
                 // Compute exact location by applying transformation matrix from initial radius vector(=-offset).
-                cos_Ti  = float(cos(i * theta_per_segment));
-                sin_Ti  = float(sin(i * theta_per_segment));
+                cos_Ti  = cosf(i * theta_per_segment);
+                sin_Ti  = sinf(i * theta_per_segment);
                 r_axis0 = -offset[axis_0] * cos_Ti + offset[axis_1] * sin_Ti;
                 r_axis1 = -offset[axis_0] * sin_Ti - offset[axis_1] * cos_Ti;
                 count   = 0;
@@ -290,7 +291,7 @@ bool probe_succeeded = false;
 
 // Perform tool length probe cycle. Requires probe switch.
 // NOTE: Upon probe failure, the program will be stopped and placed into ALARM state.
-GCUpdatePos mc_probe_cycle(float* target, plan_line_data_t* pl_data, uint8_t parser_flags) {
+GCUpdatePos mc_probe_cycle(float* target, plan_line_data_t* pl_data, bool away, bool no_error, uint8_t offsetAxis, float offset) {
     if (!config->_probe->exists()) {
         log_error("Probe pin is not configured");
         return GCUpdatePos::None;
@@ -308,10 +309,8 @@ GCUpdatePos mc_probe_cycle(float* target, plan_line_data_t* pl_data, uint8_t par
     config->_stepping->beginLowLatency();
 
     // Initialize probing control variables
-    bool is_probe_away = bits_are_true(parser_flags, GCParserProbeIsAway);
-    bool is_no_error   = bits_are_true(parser_flags, GCParserProbeIsNoError);
-    probe_succeeded    = false;  // Re-initialize probe history before beginning cycle.
-    config->_probe->set_direction(is_probe_away);
+    probe_succeeded = false;  // Re-initialize probe history before beginning cycle.
+    config->_probe->set_direction(away);
     // After syncing, check if probe is already triggered. If so, halt and issue alarm.
     // NOTE: This probe initialization error applies to all probing cycles.
     if (config->_probe->tripped()) {
@@ -321,7 +320,6 @@ GCUpdatePos mc_probe_cycle(float* target, plan_line_data_t* pl_data, uint8_t par
         return GCUpdatePos::None;  // Nothing else to do but bail.
     }
     // Setup and queue probing motion. Auto cycle-start should not start the cycle.
-    log_info("Found");
     mc_linear(target, pl_data, gc_state.position);
     // Activate the probing state monitor in the stepper module.
     probeState = ProbeState::Active;
@@ -341,8 +339,8 @@ GCUpdatePos mc_probe_cycle(float* target, plan_line_data_t* pl_data, uint8_t par
     // Probing cycle complete!
     // Set state variables and error out, if the probe failed and cycle with error is enabled.
     if (probeState == ProbeState::Active) {
-        if (is_no_error) {
-            memcpy(probe_steps, motor_steps, sizeof(motor_steps));
+        if (no_error) {
+            copyAxes(probe_steps, get_motor_steps());
         } else {
             rtAlarm = ExecAlarm::ProbeFailContact;
         }
@@ -360,6 +358,25 @@ GCUpdatePos mc_probe_cycle(float* target, plan_line_data_t* pl_data, uint8_t par
         report_probe_parameters(allChannels);
     }
     if (probe_succeeded) {
+        if (offset != __FLT_MAX__) {
+            float coord_data[MAX_N_AXIS];
+            float probe_contact[MAX_N_AXIS];
+
+            motor_steps_to_mpos(probe_contact, probe_steps);
+            coords[gc_state.modal.coord_select]->get(coord_data);  // get a copy of the current coordinate offsets
+            auto n_axis = config->_axes->_numberAxis;
+            for (int axis = 0; axis < n_axis; axis++) {  // find the axis specified. There should only be one.
+                if (offsetAxis & (1 << axis)) {
+                    coord_data[axis] = probe_contact[axis] - offset;
+                    break;
+                }
+            }
+            log_info("Probe offset applied:");
+            coords[gc_state.modal.coord_select]->set(coord_data);  // save it
+            copyAxes(gc_state.coord_system, coord_data);
+            report_wco_counter = 0;
+        }
+
         return GCUpdatePos::System;  // Successful probe cycle.
     } else {
         return GCUpdatePos::Target;  // Failed to trigger probe within travel. With or without error.
@@ -424,8 +441,7 @@ void mc_reset() {
             } else {
                 rtAlarm = ExecAlarm::AbortCycle;
             }
-            Stepper::go_idle();  // Stop stepping immediately, possibly losing position
+            Stepper::stop_stepping();  // Stop stepping immediately, possibly losing position
         }
-        config->_stepping->reset();
     }
 }

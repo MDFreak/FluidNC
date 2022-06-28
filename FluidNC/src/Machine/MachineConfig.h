@@ -74,6 +74,8 @@ namespace Machine {
         bool  _verboseErrors     = false;
         bool  _reportInches      = false;
 
+        size_t _planner_blocks = 16;
+
         // Enables a special set of M-code commands that enables and disables the parking motion.
         // These are controlled by `M56`, `M56 P1`, or `M56 Px` to enable and `M56 P0` to disable.
         // The command is modal and will be set after a planner sync. Since it is GCode, it is
@@ -105,3 +107,11 @@ namespace Machine {
 }
 
 extern Machine::MachineConfig* config;
+
+template <typename T>
+void copyAxes(T* dest, T* src) {
+    auto n_axis = config->_axes->_numberAxis;
+    for (size_t axis = 0; axis < n_axis; axis++) {
+        dest[axis] = src[axis];
+    }
+}

@@ -3,5 +3,7 @@
   "logging": true,
   "silent": true,
   "runOnStart": true,
-  "commitMessage": "--- Auto Git Commit ---"
+  "commitMessage": "--- Auto Git Commit ---",
+  "locale": "en-US",
+  "timeZone": "Europe/Berlin"
 }

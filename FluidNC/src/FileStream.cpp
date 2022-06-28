@@ -5,7 +5,14 @@
 #include "Machine/MachineConfig.h"  // config->
 #include "SDCard.h"
 #include "Logging.h"
+#include "LocalFS.h"
 #include <sys/stat.h>
+
+String FileStream::path() {
+    String retval = _path;
+    retval.replace(LOCALFS_PREFIX, "/localfs/");
+    return retval;
+}
 
 int FileStream::available() {
     return 1;
@@ -20,7 +27,7 @@ int FileStream::peek() {
 }
 void FileStream::flush() {}
 
-size_t FileStream::readBytes(char* buffer, size_t length) {
+size_t FileStream::read(char* buffer, size_t length) {
     return fread(buffer, 1, length, _fd);
 }
 
@@ -44,8 +51,12 @@ size_t FileStream::position() {
 
 FileStream::FileStream(String filename, const char* mode, const char* defaultFs) : FileStream(filename.c_str(), mode, defaultFs) {}
 
+static void replaceInitialSubstring(String& s, const char* replaced, const char* with) {
+    s = with + s.substring(strlen(replaced));
+}
+
 FileStream::FileStream(const char* filename, const char* mode, const char* defaultFs) : Channel("file") {
-    const char* actualLocalFs = "/spiffs/";
+    const char* actualLocalFs = LOCALFS_PREFIX;
     const char* sdPrefix      = "/sd/";
     const char* localFsPrefix = "/localfs/";
 
@@ -56,13 +67,17 @@ FileStream::FileStream(const char* filename, const char* mode, const char* defau
 
     // Map file system names to canonical form
     if (_path.startsWith("/SD/")) {
-        _path.replace("/SD/", sdPrefix);
+        replaceInitialSubstring(_path, "/SD/", sdPrefix);
     } else if (_path.startsWith(sdPrefix)) {
         // Leave path as-is
     } else if (_path.startsWith(localFsPrefix)) {
-        _path.replace(localFsPrefix, actualLocalFs);
+        replaceInitialSubstring(_path, localFsPrefix, actualLocalFs);
     } else if (_path.startsWith("/LOCALFS/")) {
-        _path.replace("/LOCALFS/", actualLocalFs);
+        replaceInitialSubstring(_path, "/LOCALFS/", actualLocalFs);
+    } else if (_path.startsWith("/SPIFFS/")) {
+        replaceInitialSubstring(_path, "/SPIFFS/", actualLocalFs);
+    } else if (_path.startsWith("/LITTLEFS/")) {
+        replaceInitialSubstring(_path, "/LITTLEFS/", actualLocalFs);
     } else {
         if (*filename != '/') {
             _path = '/' + _path;
@@ -71,7 +86,7 @@ FileStream::FileStream(const char* filename, const char* mode, const char* defau
         if (!strcmp(defaultFs, "/localfs")) {
             // If the default filesystem is /localfs, replace the initial /
             // with, for example, "/spiffs/", instead of the surrogate
-            _path.replace("/", actualLocalFs);
+            replaceInitialSubstring(_path, "/", actualLocalFs);
         } else {
             // If the default filesystem is not /localfs, insert
             // the defaultFs name - which does not end with / -
@@ -81,20 +96,19 @@ FileStream::FileStream(const char* filename, const char* mode, const char* defau
     }
     if (_path.startsWith(sdPrefix)) {
         if (config->_sdCard->begin(SDCard::State::BusyWriting) != SDCard::State::Idle) {
-            log_info("FS busy ");
+            log_info("FS busy");
             throw Error::FsFailedMount;
         }
         _isSD = true;
     }
-    if (_path.startsWith(actualLocalFs) && _path.length() > (30 + strlen(actualLocalFs))) {
-        log_info("Filename too long");
-    }
     _fd = fopen(_path.c_str(), mode);
     if (!_fd) {
+        bool opening = strcmp(mode, "w");
+        log_debug("Cannot " << (opening ? "open" : "create") << " file " << _path);
         if (_isSD) {
             config->_sdCard->end();
         }
-        throw strcmp(mode, "w") ? Error::FsFailedOpenFile : Error::FsFailedCreateFile;
+        throw opening ? Error::FsFailedOpenFile : Error::FsFailedCreateFile;
     }
 }
 

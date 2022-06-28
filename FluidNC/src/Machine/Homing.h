@@ -9,25 +9,35 @@
 
 namespace Machine {
     class Homing : public Configuration::Configurable {
-        // The return value is the setting time
-        static uint32_t plan_move(MotorMask motors, bool approach, bool seek, float customPulloff);
-
-        static bool squaredOneSwitch(MotorMask motors);
-        static bool squaredStressfree(MotorMask motors);
         static void set_mpos(AxisMask axisMask);
 
         static const int REPORT_LINE_NUMBER = 0;
+
+        static bool needsPulloff2(MotorMask motors);
+
+        enum class HomingPhase {
+            PrePulloff,
+            FastApproach,
+            Pulloff0,
+            SlowApproach,
+            Pulloff1,
+            Pulloff2,
+        };
+
+        static uint32_t plan_move(MotorMask motors, HomingPhase phase);
 
     public:
         Homing() = default;
 
         static const int AllCycles = 0;  // Must be zero.
 
+        static volatile bool _approach;
+
         static void run_cycles(AxisMask axisMask);
         static void run_one_cycle(AxisMask axisMask);
 
         static AxisMask axis_mask_from_cycle(int cycle);
-        static void     run(MotorMask remainingMotors, bool approach, bool seek, float customPulloff);
+        static void     run(MotorMask remainingMotors, HomingPhase phase);
 
         // The homing cycles are 1,2,3 etc.  0 means not homed as part of home-all,
         // but you can still home it manually with e.g. $HA
@@ -45,15 +55,15 @@ namespace Machine {
         void validate() const override { Assert(_cycle >= 0, "Homing cycle must be defined"); }
 
         void group(Configuration::HandlerBase& handler) override {
-            handler.item("cycle", _cycle);
+            handler.item("cycle", _cycle, -1, 6);
             handler.item("allow_single_axis", _allow_single_axis);
             handler.item("positive_direction", _positiveDirection);
             handler.item("mpos_mm", _mpos);
-            handler.item("feed_mm_per_min", _feedRate);
-            handler.item("seek_mm_per_min", _seekRate);
-            handler.item("settle_ms", _settle_ms);
-            handler.item("seek_scaler", _seek_scaler);
-            handler.item("feed_scaler", _feed_scaler);
+            handler.item("feed_mm_per_min", _feedRate, 1.0, 100000.0);
+            handler.item("seek_mm_per_min", _seekRate, 1.0, 100000.0);
+            handler.item("settle_ms", _settle_ms, 0, 1000);
+            handler.item("seek_scaler", _seek_scaler, 1.0, 100.0);
+            handler.item("feed_scaler", _feed_scaler, 1.0, 100.0);
         }
 
         void init() {}

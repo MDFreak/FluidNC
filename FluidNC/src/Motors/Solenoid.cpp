@@ -54,18 +54,19 @@ namespace MotorDrivers {
             return;  // We cannot continue without the output pin
         }
 
-        pwm_cnt[SolenoidMode::Off]  = uint32_t(_off_percent / 100.0f * 65535.0f);
-        pwm_cnt[SolenoidMode::Pull] = uint32_t(_pull_percent / 100.0f * 65535.0f);
-        pwm_cnt[SolenoidMode::Hold] = uint32_t(_hold_percent / 100.0f * 65535.0f);
+        uint8_t pwm_precision = ledc_calc_pwm_precision(_pwm_freq);  // determine the best precision
+        float   max_duty      = float((1 << pwm_precision));
+
+        pwm_cnt[SolenoidMode::Off]  = uint32_t(_off_percent / 100.0f * max_duty);
+        pwm_cnt[SolenoidMode::Pull] = uint32_t(_pull_percent / 100.0f * max_duty);
+        pwm_cnt[SolenoidMode::Hold] = uint32_t(_hold_percent / 100.0f * max_duty);
 
         _axis_index = axis_index();
 
         config_message();
 
-        _pwm_chan_num     = ledcInit(_output_pin, -1, double(_pwm_freq), SERVO_PWM_RESOLUTION_BITS);  // Allocate a channel
+        _pwm_chan_num     = ledcInit(_output_pin, -1, double(_pwm_freq), pwm_precision);  // Allocate a channel
         _current_pwm_duty = 0;
-
-        _disabled = true;
 
         startUpdateTask(_update_rate_ms);
     }
@@ -74,17 +75,17 @@ namespace MotorDrivers {
 
     void Solenoid::config_message() {
         log_info("    " << name() << " Pin: " << _output_pin.name() << " Off: " << _off_percent << " Hold: " << _hold_percent
-                        << " Pull:" << _pull_percent << " Duration:" << _pull_ms);
+                        << " Pull:" << _pull_percent << " Duration:" << _pull_ms << " pwm hz:" << _pwm_freq);
     }
 
     void Solenoid::set_location() {
         bool is_solenoid_on;
 
-        if (_disabled || _has_errors) {
+        if (_has_errors) {
             return;
         }
 
-        float mpos = steps_to_mpos(motor_steps[_axis_index], _axis_index);  // get the axis machine position in mm
+        float mpos = steps_to_mpos(get_axis_motor_steps(_axis_index), _axis_index);  // get the axis machine position in mm
 
         _dir_invert ? is_solenoid_on = (mpos < 0.0) : is_solenoid_on = (mpos > 0.0);
 
@@ -119,6 +120,8 @@ namespace MotorDrivers {
 
         _write_pwm(pwm_cnt[_current_mode]);
     }
+
+    void Solenoid::set_disable(bool disable) {}  // NOP
 
     namespace {
         MotorFactory::InstanceBuilder<Solenoid> registration("solenoid");

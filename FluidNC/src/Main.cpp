@@ -24,15 +24,14 @@
 #    include "WebUI/InputBuffer.h"
 
 #    include "WebUI/WifiConfig.h"
-#    include <SPIFFS.h>
+#    include "LocalFS.h"
 
 extern void make_user_commands();
 
-void setup()
-  {
-    try
-      {
-        uartInit();  // Setup serial port
+void setup() {
+    try {
+        uartInit();       // Setup serial port
+        Uart0.println();  // create some white space after ESP32 boot info
 
         // Setup input polling loop after loading the configuration,
         // because the polling may depend on the config
@@ -48,36 +47,35 @@ void setup()
         log_info("FluidNC " << git_info);
         log_info("Compiled with ESP32 SDK:" << ESP.getSdkVersion());
 
-        if (!SPIFFS.begin(true))
-          {
-            log_error("Cannot mount the local filesystem");
-          }
+        if (LocalFS.begin(true)) {
+            log_info("Local filesystem type is " << LOCALFS_NAME);
+        } else {
+            log_error("Cannot mount the local filesystem " << LOCALFS_NAME);
+        }
 
         bool configOkay = config->load();
 
         make_user_commands();
 
-        if (configOkay)
-          {
+        if (configOkay) {
             log_info("Machine " << config->_name);
             log_info("Board " << config->_board);
 
             // The initialization order reflects dependencies between the subsystems
-            if (config->_i2so)
-              {
+            if (config->_i2so) {
                 config->_i2so->init();
-              }
-            if (config->_spi)
-              {
+            }
+            if (config->_spi) {
                 config->_spi->init();
 
-                if (config->_sdCard != nullptr)
-                  {
+                if (config->_sdCard != nullptr) {
                     config->_sdCard->init();
-                  }
-              }
+                }
+            }
 
             config->_stepping->init();  // Configure stepper interrupt timers
+
+            plan_init();
 
             config->_userOutputs->init();
 
@@ -87,23 +85,22 @@ void setup()
 
             config->_kinematics->init();
 
-            memset(motor_steps, 0, sizeof(motor_steps));  // Clear machine position.
+            auto n_axis = config->_axes->_numberAxis;
+            for (size_t axis = 0; axis < n_axis; axis++) {
+                set_motor_steps(axis, 0);  // Clear machine position.
+            }
 
             machine_init();  // user supplied function for special initialization
-          }
+        }
 
         // Initialize system state.
-        if (sys.state != State::ConfigAlarm)
-          {
-            if (FORCE_INITIALIZATION_ALARM)
-              {
+        if (sys.state != State::ConfigAlarm) {
+            if (FORCE_INITIALIZATION_ALARM) {
                 // Force ALARM state upon a power-cycle or hard reset.
                 sys.state = State::Alarm;
-              }
-            else
-              {
+            } else {
                 sys.state = State::Idle;
-              }
+            }
 
             limits_init();
 
@@ -114,49 +111,32 @@ void setup()
             // NOTE: The startup script will run after successful completion of the homing cycle, but
             // not after disabling the alarm locks. Prevents motion startup blocks from crashing into
             // things uncontrollably. Very bad.
-            if (config->_start->_mustHome && Machine::Axes::homingMask)
-              {
+            if (config->_start->_mustHome && Machine::Axes::homingMask) {
                 // If there is an axis with homing configured, enter Alarm state on startup
                 sys.state = State::Alarm;
-              }
-            for (auto s : config->_spindles)
-              {
+            }
+            for (auto s : config->_spindles) {
                 s->init();
-              }
+            }
             Spindles::Spindle::switchSpindle(0, config->_spindles, spindle);
 
             config->_coolant->init();
             config->_probe->init();
-          }
+        }
 
-      }
-    catch (const AssertionFailed& ex)
-      {
+    } catch (const AssertionFailed& ex) {
         // This means something is terribly broken:
         log_error("Critical error in main_init: " << ex.what());
         sys.state = State::ConfigAlarm;
-      }
+    }
 
-    if (!WebUI::wifi_config.begin())
-      {
+    if (!WebUI::wifi_config.begin()) {
         WebUI::bt_config.begin();
-      }
-    WebUI::inputBuffer.begin();
+    }
     allChannels.deregistration(&startupLog);
-  }
+}
 
-static void reset_variables()
-  {
-    # ifdef DEBUG_STEPPING
-        rtTestPl    = false;
-        rtTestSt    = false;
-        st_seq      = 0;
-        st_seq0     = 0;
-        pl_seq0     = 0;
-        seg_seq0    = 0;
-        seg_seq1    = 0;
-        planner_seq = 0;
-      # endif
+static void reset_variables() {
     // Reset primary systems.
     system_reset();
     protocol_reset();
@@ -168,72 +148,64 @@ static void reset_variables()
 
     plan_reset();  // Clear block buffer and planner variables
 
-    if (sys.state != State::ConfigAlarm)
-      {
-        if (spindle)
-          {
+    if (sys.state != State::ConfigAlarm) {
+        if (spindle) {
             spindle->stop();
             report_ovr_counter = 0;  // Set to report change immediately
-          }
+        }
         Stepper::reset();  // Clear stepper subsystem variables
-      }
+    }
 
     // Sync cleared gcode and planner positions to current system position.
     plan_sync_position();
     gc_sync_position();
+    allChannels.flushRx();
     report_init_message(allChannels);
     mc_init();
-  }
+}
 
-void loop()
-  {
+void loop() {
     static int tries = 0;
-    try
-      {
+    try {
         reset_variables();
-          // Start the main loop. Processes program inputs and executes them.
-          // This can exit on a system abort condition, in which case run_once()
-          // is re-executed by an enclosing loop.  It can also exit via a
-          // throw that is caught and handled below.
+        // Start the main loop. Processes program inputs and executes them.
+        // This can exit on a system abort condition, in which case run_once()
+        // is re-executed by an enclosing loop.  It can also exit via a
+        // throw that is caught and handled below.
         protocol_main_loop();
-      }
-    catch (const AssertionFailed& ex)
-      {
+    } catch (const AssertionFailed& ex) {
         // If an assertion fails, we display a message and restart.
-          // This could result in repeated restarts if the assertion
-          // happens before waiting for input, but that is unlikely
-          // because the code in reset_variables() and the code
-          // that precedes the input loop has few configuration
-          // dependencies.  The safest approach would be to set
-          // a "reconfiguration" flag and redo the configuration
-          // step, but that would require combining main_init()
-          // and run_once into a single control flow, and it would
-          // require careful teardown of the existing configuration
-          // to avoid memory leaks. It is probably worth doing eventually.
+        // This could result in repeated restarts if the assertion
+        // happens before waiting for input, but that is unlikely
+        // because the code in reset_variables() and the code
+        // that precedes the input loop has few configuration
+        // dependencies.  The safest approach would be to set
+        // a "reconfiguration" flag and redo the configuration
+        // step, but that would require combining main_init()
+        // and run_once into a single control flow, and it would
+        // require careful teardown of the existing configuration
+        // to avoid memory leaks. It is probably worth doing eventually.
         log_error("Critical error in run_once: " << ex.msg);
         log_error("Stacktrace: " << ex.stackTrace);
         sys.state = State::ConfigAlarm;
-      }
+    }
     // sys.abort is a user-initiated exit via ^x so we don't limit the number of occurrences
-    if (!sys.abort && ++tries > 1)
-      {
+    if (!sys.abort && ++tries > 1) {
         log_info("Stalling due to too many failures");
         while (1) {}
-      }
-  }
+    }
+}
 
 void WEAK_LINK machine_init() {}
 
 #    if 0
-    int main()
-      {
-        setup();  // setup()
-        while (1)
-          {   // loop()
-            loop();
-          }
-        return 0;
-      }
-  #    endif
+int main() {
+    setup();  // setup()
+    while (1) {   // loop()
+        loop();
+    }
+    return 0;
+}
+#    endif
 
 #endif

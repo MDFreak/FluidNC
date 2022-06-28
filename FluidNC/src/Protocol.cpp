@@ -17,15 +17,6 @@
 #include "Settings.h"       // settings_execute_startup
 #include "InputFile.h"      // infile
 
-#ifdef DEBUG_STEPPING
-volatile bool rtCrash;
-volatile bool rtSeq;
-volatile bool rtSegSeq;
-volatile bool rtTestPl;
-volatile bool rtTestSt;
-uint32_t      expected_steps[MAX_N_AXIS];
-#endif
-
 #ifdef DEBUG_REPORT_REALTIME
 volatile bool rtExecDebug;
 #endif
@@ -141,6 +132,9 @@ void protocol_main_loop() {
                 report_feedback_message(Message::CheckLimits);
             }
         }
+        if (config->_control->startup_check()) {
+            rtAlarm = ExecAlarm::ControlPin;
+        }
 
         if (sys.state == State::Alarm || sys.state == State::Sleep) {
             report_feedback_message(Message::AlarmLock);
@@ -148,7 +142,7 @@ void protocol_main_loop() {
         } else {
             // Check if the safety door is open.
             sys.state = State::Idle;
-            if (config->_control->system_check_safety_door_ajar()) {
+            if (config->_control->safety_door_ajar()) {
                 rtSafetyDoor = true;
                 protocol_execute_realtime();  // Enter safety door mode. Should return as IDLE state.
             }
@@ -295,6 +289,7 @@ static void protocol_do_alarm() {
             sys.state = State::Alarm;  // Set system alarm state
             alarm_msg(rtAlarm);
             report_feedback_message(Message::CriticalEvent);
+            protocol_disable_steppers();
             rtReset = false;  // Disable any existing reset
             do {
                 // Block everything except reset and status reports until user issues reset or power
@@ -703,6 +698,9 @@ static void protocol_do_late_reset() {
     report_ovr_counter = 0;  // Set to report change immediately
     config->_coolant->stop();
 
+    protocol_disable_steppers();
+    config->_stepping->reset();
+
     // turn off all User I/O immediately
     config->_userOutputs->all_off();
 
@@ -732,34 +730,6 @@ void protocol_do_macro(int macro_num) {
 void protocol_exec_rt_system() {
     protocol_do_alarm();  // If there is a hard or soft limit, this will block until rtReset is set
 
-#ifdef DEBUG_STEPPING
-    if (rtSegSeq) {
-        rtSegSeq = false;
-        log_error("segment exp " << seg_seq_exp << " actual " << seg_seq_act);
-        rtReset = true;
-    }
-    if (rtSeq) {
-        rtSeq = false;
-        log_error("planner " << pl_seq0 << " stepper " << st_seq0);
-        rtReset = true;
-    }
-    if (rtCrash) {
-        rtCrash = false;
-        log_error("Stepper exp,actual " << expected_steps[0] << "," << motor_steps[0] << " " << expected_steps[1] << "," << motor_steps[1]
-                                        << " " << expected_steps[2] << "," << motor_steps[2]);
-        rtReset = true;
-    }
-    if (rtTestPl) {
-        rtTestPl = false;
-        log_info("Poisoned planner_seq");
-        planner_seq += 20;
-    }
-    if (rtTestSt) {
-        rtTestSt = false;
-        log_info("Poisoned stepper");
-        --motor_steps[0];
-    }
-#endif
     if (rtReset) {
         if (sys.state == State::Homing) {
             rtAlarm = ExecAlarm::HomingFailReset;
@@ -899,7 +869,7 @@ static void protocol_exec_rt_suspend() {
 
                     // Get current position and store restore location and spindle retract waypoint.
                     if (!sys.suspend.bit.restartRetract) {
-                        memcpy(restore_target, parking_target, sizeof(restore_target[0]) * config->_axes->_numberAxis);
+                        copyAxes(restore_target, parking_target);
                         retract_waypoint += restore_target[PARKING_AXIS];
                         retract_waypoint = MIN(retract_waypoint, PARKING_TARGET);
                     }
@@ -957,7 +927,7 @@ static void protocol_exec_rt_suspend() {
                     }
                     // Allows resuming from parking/safety door. Actively checks if safety door is closed and ready to resume.
                     if (sys.state == State::SafetyDoor) {
-                        if (!config->_control->system_check_safety_door_ajar()) {
+                        if (!config->_control->safety_door_ajar()) {
                             sys.suspend.bit.safetyDoorAjar = false;  // Reset door ajar flag to denote ready to resume.
                         }
                     }

@@ -10,7 +10,7 @@ stepping:
 
 axes:
   shared_stepper_disable_pin: gpio.25:high
-
+  
   x:
     steps_per_mm: 800
     max_rate_mm_per_min: 5000
@@ -23,7 +23,7 @@ axes:
       feed_mm_per_min: 100.000
       seek_mm_per_min: 200.000
       settle_ms: 500
-
+    
     motor0:
       limit_pos_pin: gpio.35
       hard_limits: false
@@ -67,7 +67,7 @@ axes:
       feed_mm_per_min: 100.000
       seek_mm_per_min: 200.000
       settle_ms: 500
-
+    
     motor0:
       limit_neg_pin: NO_PIN
       limit_pos_pin: gpio.34
@@ -96,7 +96,7 @@ axes:
       feed_mm_per_min: 100.000
       seek_mm_per_min: 200.000
       settle_ms: 500
-
+    
     motor0:
       limit_neg_pin: NO_PIN
       limit_pos_pin: gpio.39
@@ -125,13 +125,13 @@ axes:
       feed_mm_per_min: 100.000
       seek_mm_per_min: 200.000
       settle_ms: 500
-
+    
     motor0:
       limit_neg_pin: NO_PIN
       limit_pos_pin: gpio.36
       limit_all_pin: NO_PIN
       hard_limits: false
-      pulloff_mm: 1.00
+      pulloff_mm:1.00
       tmc_2209:
         step_pin: gpio.16
         direction_pin: gpio.15
@@ -139,7 +139,7 @@ axes:
 
     motor1:
       null_motor:
-
+      
 spi:
   miso_pin: gpio.19
   mosi_pin: gpio.23

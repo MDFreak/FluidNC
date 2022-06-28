@@ -30,7 +30,8 @@ namespace Spindles {
     class BESC : public PWM {
     private:
         // Fixed
-        const uint32_t besc_pwm_freq = 50;  // 50 Hz
+        const uint32_t besc_pwm_min_freq = 50;    // 50 Hz
+        const uint32_t besc_pwm_max_freq = 2000;  // 50 Hz
 
         // Calculated
         uint16_t _pulse_span_counts;  // In counts of a 16-bit counter
@@ -60,8 +61,8 @@ namespace Spindles {
         void group(Configuration::HandlerBase& handler) override {
             PWM::group(handler);
 
-            handler.item("min_pulse_us", _min_pulse_us);
-            handler.item("max_pulse_us", _max_pulse_us);
+            handler.item("min_pulse_us", _min_pulse_us, 500, 3000);
+            handler.item("max_pulse_us", _max_pulse_us, 500, 3000);
         }
 
         void afterParse() override {}
